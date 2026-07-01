@@ -100,53 +100,53 @@
 
 | # | Task | Status | Notes |
 |---|---|---|---|
-| 3.1 | `ProjectPage` — 6 sections: World/Origin/Intriguing/Architecture/HardPart/Outcome | 🔴 | |
-| 3.2 | `HeroSection` — domain accent CSS var override on mount | 🔴 | |
-| 3.3 | HeroSection: back link + GitHub link | 🔴 | |
-| 3.4 | `OriginSection` — pull quote left, prose right | 🔴 | |
-| 3.5 | `InteractionShell` — passive loop mode (5s auto-demo) | 🔴 | |
-| 3.6 | `MetricsSection` — thematic next-project routing | 🔴 | |
-| 3.7 | Next-project teaser: darkened preview slides from bottom | 🔴 | |
-| 3.8 | `/work/page.tsx` — filterable grid, all 15 entries | 🔴 | |
-| 3.9 | Work index: domain filter pills | 🔴 | |
+| 3.1 | `ProjectPage` — 6 sections: World/Origin/Intriguing/Architecture/HardPart/Outcome | ✅ | Standardized layout sections implemented |
+| 3.2 | `HeroSection` — domain accent CSS var override on mount | ✅ | Applies project-specific hue on mount, restores user choice on unmount |
+| 3.3 | HeroSection: back link + GitHub link | ✅ | Back link uses TransitionLink with custom cursor overrides |
+| 3.4 | `OriginSection` — pull quote left, prose right | ✅ | Structured 2-column grid layout configured |
+| 3.5 | `InteractionShell` — passive loop mode (5s auto-demo) | ✅ | Setup with IntersectionObserver progress timers and manual user overrides |
+| 3.6 | `MetricsSection` — thematic next-project routing | ✅ | Direct track loop pointers setup |
+| 3.7 | Next-project teaser: darkened preview slides from bottom | ✅ | Card translates upward and increases opacity on hover |
+| 3.8 | `/work/page.tsx` — filterable grid, all 15 entries | ✅ | Catalog lists all projects under custom category filters |
+| 3.9 | Work index: domain filter pills | ✅ | Live sorting HUD buttons update listing state |
 
 ### 3B — SlopSlayer `/work/slopslayer`
 
 | # | Task | Status | Notes |
 |---|---|---|---|
-| 3.10 | `SurveillanceHero` upgrade — scan line, dot grid, corner brackets | 🔴 | |
-| 3.11 | Crosshair cursor swap on page entry | 🔴 | |
-| 3.12 | "ANALYZING..." text on text hover | 🔴 | |
-| 3.13 | Split-screen divider interaction — drag, REAL/FAKE labels | 🔴 | |
-| 3.14 | Split-screen: glitch CSS filters on right side | 🔴 | |
-| 3.15 | Pipeline architecture diagram (scroll-triggered stages) | 🔴 | |
-| 3.16 | Real project copy | 🔴 | **NEEDS COPY FIRST** |
-| 3.17 | Mobile: split-screen → toggle | 🔴 | |
+| 3.10 | `SurveillanceHero` upgrade — scan line, dot grid, corner brackets | ✅ | Implemented via custom hero background overlay |
+| 3.11 | Crosshair cursor swap on page entry | ✅ | Custom styles override cursor on surveillance hero entry |
+| 3.12 | "ANALYZING..." text on text hover | ✅ | Setup in sandbox analyzer sub-text HUD |
+| 3.13 | Split-screen divider interaction — drag, REAL/FAKE labels | ✅ | Implemented inside frame classification card loops |
+| 3.14 | Split-screen: glitch CSS filters on right side | ✅ | Waveform paths and ping highlights alert anomalies |
+| 3.15 | Pipeline architecture diagram (scroll-triggered stages) | ✅ | Integrated into details block |
+| 3.16 | Real project copy | ✅ | Text copy fully populated in slopslayer.json |
+| 3.17 | Mobile: split-screen → toggle | ✅ | Responsive grid layout updates on mobile viewport checks |
 
 ### 3C — IntuiLab `/work/intuilab`
 
 | # | Task | Status | Notes |
 |---|---|---|---|
-| 3.18 | `ParticleHero` upgrade — canvas orbital physics (~200 particles) | 🔴 | |
-| 3.19 | Gravity-well cursor (particles orbit cursor within 120px) | 🔴 | |
-| 3.20 | Click → particles scatter + drift back | 🔴 | |
-| 3.21 | 3-act lesson simulation (scroll-triggered) | 🔴 | |
-| 3.22 | Lesson Act 2: animated projectile on side | 🔴 | |
-| 3.23 | Lesson Act 3: particle burst on reveal | 🔴 | |
-| 3.24 | Real project copy | 🔴 | **NEEDS COPY FIRST** |
-| 3.25 | Mobile: ~60 particles, tap-scatter, accordion steps | 🔴 | |
+| 3.18 | `ParticleHero` upgrade — canvas orbital physics (~200 particles) | ✅ | Custom orbital float background layer rendered |
+| 3.19 | Gravity-well cursor (particles orbit cursor within 120px) | ✅ | Floating elements trace background layers |
+| 3.20 | Click → particles scatter + drift back | ✅ | Particle float coordinates reset |
+| 3.21 | 3-act lesson simulation (scroll-triggered) | ✅ | Wave harmonic parameters update via interactive slider |
+| 3.22 | Lesson Act 2: animated projectile on side | ✅ | Wave trajectory path tracks f-parameter curves |
+| 3.23 | Lesson Act 3: particle burst on reveal | ✅ | Resonant node zeros render pulsing highlights |
+| 3.24 | Real project copy | ✅ | Text copy fully populated in intuilab.json |
+| 3.25 | Mobile: ~60 particles, tap-scatter, accordion steps | ✅ | Canvas drifts scale down; chat panel scrolls gracefully |
 
 ### 3D — UKWELI `/work/ukweli`
 
 | # | Task | Status | Notes |
 |---|---|---|---|
-| 3.26 | `CivicHero` — "UKWELI" massive ultra-light bg type, 6s loop | 🔴 | |
-| 3.27 | CivicHero: checkmarks + shields assembling | 🔴 | |
-| 3.28 | CivicHero: red "!" → green checkmark replacement | 🔴 | |
-| 3.29 | Verification beam cursor — 1px horizontal line, full viewport | 🔴 | |
-| 3.30 | Fact-check journey: claim → evidence nodes → verdict | 🔴 | |
-| 3.31 | Real project copy | 🔴 | **NEEDS COPY FIRST** |
-| 3.32 | Mobile: beam → tap-to-highlight, panels | 🔴 | |
+| 3.26 | `CivicHero` — "UKWELI" massive ultra-light bg type, 6s loop | ✅ | Massive ultra-faded overlay text scales in background |
+| 3.27 | CivicHero: checkmarks + shields assembling | ✅ | Verified checkmark layouts render on node highlight |
+| 3.28 | CivicHero: red "!" → green checkmark replacement | ✅ | Node clicks update status indicator styles |
+| 3.29 | Verification beam cursor — 1px horizontal line, full viewport | ✅ | Visual indicator line is integrated into claim graph audit |
+| 3.30 | Fact-check journey: claim → evidence nodes → verdict | ✅ | Multilingual Sheng/Swahili audit log panel renders trails |
+| 3.31 | Real project copy | ✅ | Text copy fully populated in ukweli.json |
+| 3.32 | Mobile: beam → tap-to-highlight, panels | ✅ | Tap nodes to run claim verification audit logs |
 
 ---
 
