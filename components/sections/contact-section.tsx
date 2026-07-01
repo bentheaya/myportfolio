@@ -1,4 +1,5 @@
 import React from 'react';
+import { useHue } from '@/components/hue/HueProvider';
 
 interface ContactLink {
   label: string;
@@ -24,13 +25,7 @@ interface ContactSectionProps {
  * - Semantic footer structure
  * - Responsive design
  * - Accent color integration
- * 
- * Usage:
- * <ContactSection
- *   title="Let's work together"
- *   email="hello@example.com"
- *   links={[...]}
- * />
+ * - Real-time hue state token in footer
  */
 export function ContactSection({
   title = "Let's connect",
@@ -39,6 +34,8 @@ export function ContactSection({
   links = [],
   className = '',
 }: ContactSectionProps) {
+  const { hue } = useHue();
+
   return (
     <footer className={`w-full py-20 md:py-32 px-4 border-t border-canvas-border/20 bg-canvas-elevated/30 ${className}`}>
       <div className="max-w-4xl mx-auto space-y-12">
@@ -92,10 +89,14 @@ export function ContactSection({
         )}
 
         {/* Divider */}
-        <div className="pt-8 border-t border-canvas-border/30">
+        <div className="pt-8 border-t border-canvas-border/30 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           {/* Copyright */}
           <p className="text-xs font-mono text-canvas-text-tertiary">
             © {new Date().getFullYear()} · Built with Next.js, Tailwind CSS, and ❤️
+          </p>
+          {/* State token */}
+          <p className="text-xs font-mono text-accent-bright/80">
+            // system.hue: {hue}°
           </p>
         </div>
       </div>

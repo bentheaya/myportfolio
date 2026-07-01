@@ -1,7 +1,5 @@
-'use client';
-
 import React, { useState, useRef } from 'react';
-import Link from 'next/link';
+import { TransitionLink } from '@/components/transitions/TransitionLink';
 
 interface ProjectCardProps {
   title: string;
@@ -24,15 +22,6 @@ interface ProjectCardProps {
  * - Domain badge integration
  * - Responsive design
  * - Custom accent hue support
- * 
- * Usage:
- * <ProjectCard
- *   title="AI Detection System"
- *   description="Real-time content detection"
- *   domain="AI / Detection"
- *   href="/projects/detection"
- *   accentHue={164}
- * />
  */
 export function ProjectCard({
   title,
@@ -63,8 +52,15 @@ export function ProjectCard({
       } as React.CSSProperties)
     : undefined;
 
+  const hexColor = accentHue !== undefined ? `hsl(${accentHue} 100% 50%)` : undefined;
+
   return (
-    <Link href={href}>
+    <TransitionLink
+      href={href}
+      className="block"
+      data-cursor="project"
+      data-project-color={hexColor}
+    >
       <div
         ref={cardRef}
         style={style}
@@ -132,6 +128,6 @@ export function ProjectCard({
           />
         )}
       </div>
-    </Link>
+    </TransitionLink>
   );
 }

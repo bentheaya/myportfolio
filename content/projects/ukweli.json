@@ -1,0 +1,50 @@
+{
+  "hero": {
+    "backHref": "/work",
+    "domain": "Civic AI / Information Integrity",
+    "title": "UKWELI Civic Platform",
+    "subtitle": "A multilingual misinformation tracking platform for Swahili/Sheng communities, designed for accessible claim verification workflows."
+  },
+  "origin": {
+    "pullQuote": "Trust in information begins with accessible verification pathways.",
+    "paragraphs": [
+      "UKWELI was launched to address misinformation in code-switched public discourse where mainstream moderation and fact-verification tooling often underperform on local language patterns.",
+      "The project’s mission is to make verification flows understandable and fast: users can surface suspicious claims, inspect context, and follow structured fact-graph style evidence pathways."
+    ]
+  },
+  "architecture": {
+    "title": "Typed Civic Verification Frontend Architecture",
+    "description": "A TypeScript UI system for multilingual claim workflows, evidence visualization, and interaction-state management.",
+    "codeBlocks": [
+      {
+        "filename": "claims.ts",
+        "language": "typescript",
+        "code": "export type Claim = {\n  id: string\n  text: string\n  language: \"sw\" | \"en\" | \"sheng\" | \"mixed\"\n  status: \"pending\" | \"reviewed\" | \"verified\" | \"flagged\"\n}\n\nexport function groupByStatus(claims: Claim[]) {\n  return claims.reduce<Record<string, Claim[]>>((acc, claim) => {\n    acc[claim.status] = acc[claim.status] ?? []\n    acc[claim.status].push(claim)\n    return acc\n  }, {})\n}"
+      }
+    ],
+    "narrative": "The platform architecture emphasizes clarity under complexity: claims, sources, and verification state transitions are modeled explicitly to support reliable UI rendering and user trust. Typed state management reduces ambiguity in moderation and review flows, while modular components make it easier to adapt interfaces for multilingual and mixed-language content contexts."
+  },
+  "hardParts": {
+    "title": "Handling Mixed-Language Claim Semantics",
+    "description": "The toughest challenge was preserving meaning during classification and UI interpretation of code-switched content.",
+    "codeBlocks": [
+      {
+        "filename": "language-normalization.ts",
+        "language": "typescript",
+        "code": "const slangMap: Record<string, string> = {\n  \"noma\": \"excellent\",\n  \"si\": \"not\",\n  \"iko\": \"exists\"\n}\n\nexport function normalizeMixedText(input: string): string {\n  return input\n    .split(/\\s+/)\n    .map((w) => slangMap[w.toLowerCase()] ?? w)\n    .join(\" \")\n}"
+      }
+    ],
+    "narrative": "Mixed-language phrasing led to false positives/negatives when treated as monolingual input. The fix involved introducing normalization layers and explicit language tagging before downstream interpretation. Combined with careful UX labels and staged verification states, this improved consistency in how claims were processed and presented.",
+    "reverseLayout": true
+  },
+  "metrics": {
+    "metrics": [
+      { "label": "Triage Turnaround", "value": "1.5h" },
+      { "label": "Parsing Precision", "value": "94.2%" },
+      { "label": "Workflow Completion", "value": "98.8%" }
+    ],
+    "nextProjectTitle": "Nyaraka Digital Archive",
+    "nextProjectHref": "/work/nyaraka",
+    "nextProjectSubtitle": "Digital preservation of cultural heritage and OCR indexing"
+  }
+}

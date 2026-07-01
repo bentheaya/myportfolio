@@ -1,87 +1,95 @@
-import Link from 'next/link'
+'use client';
 
-const projects = [
-  {
-    slug: 'detection-system',
-    title: 'Real-Time Content Detection',
-    domain: 'AI / Detection',
-    description: 'Building scalable machine learning pipelines with TypeScript',
-  },
-  {
-    slug: 'analytics',
-    title: 'Analytics Platform',
-    domain: 'Data / Infrastructure',
-    description: 'Processing billions of events with Kafka and ClickHouse',
-  },
-]
-
-export const metadata = {
-  title: 'Work',
-  description: 'Selected projects and case studies',
-}
+import React, { useState } from 'react';
+import { projectsMetadata } from '@/lib/projects';
+import { ProjectCard } from '@/components/ui/project-card';
+import { ScrollReveal } from '@/components/animations/ScrollReveal';
 
 export default function WorkPage() {
+  const [activeFilter, setActiveFilter] = useState('All');
+
+  const filterOptions = [
+    { label: 'All Work', value: 'All' },
+    { label: 'AI & Models', value: 'AI & Models' },
+    { label: 'Spatial & Geometry', value: 'Spatial & Geometry' },
+    { label: 'Architectures & Backends', value: 'Architectures & Backends' },
+    { label: 'Civic Data & Archives', value: 'Civic Data & Archives' },
+  ];
+
+  // Filter projects list dynamically
+  const filteredProjects = projectsMetadata.filter(
+    (p) => activeFilter === 'All' || p.track === activeFilter
+  );
+
   return (
-    <main className="w-full min-h-screen bg-canvas-bg">
-      {/* Hero */}
-      <section className="py-16 md:py-24 px-4">
-        <div className="max-w-6xl mx-auto space-y-8">
-          <h1 className="text-5xl md:text-7xl font-heading font-bold">
-            Selected Work
-          </h1>
-          <p className="text-lg text-canvas-text-secondary max-w-2xl">
-            A collection of projects spanning system design, machine learning, and infrastructure.
+    <main className="w-full min-h-screen bg-canvas-bg pt-12 md:pt-20">
+      {/* Header section */}
+      <section className="py-16 md:py-24 px-6">
+        <div className="max-w-5xl mx-auto space-y-6">
+          <div className="space-y-2">
+            <span className="text-xs font-mono text-accent-bright">// index.work</span>
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-heading font-bold text-canvas-text leading-none uppercase select-none">
+              Selected Projects
+            </h1>
+          </div>
+          <p className="text-base md:text-lg text-canvas-text-secondary max-w-2xl font-mono leading-relaxed select-none">
+            A comprehensive catalog of experimental software systems, neuro-symbolic models, and architectural designs built to scale.
           </p>
-        </div>
-      </section>
 
-      {/* Projects Grid */}
-      <section className="py-12 md:py-20 px-4 border-t border-canvas-border/20">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid gap-8 md:gap-12">
-            {projects.map((project) => (
-              <Link
-                key={project.slug}
-                href={`/projects/${project.slug}`}
-                className="group block"
+          {/* Filter Pills */}
+          <div className="flex flex-wrap gap-2 pt-6">
+            {filterOptions.map((opt) => (
+              <button
+                key={opt.value}
+                onClick={() => setActiveFilter(opt.value)}
+                className={`px-3.5 py-1.5 rounded-full font-mono text-xs border transition-all duration-300 ${
+                  activeFilter === opt.value
+                    ? 'border-accent-bright bg-accent-bright text-canvas-bg shadow-lg shadow-accent-bright/15'
+                    : 'border-canvas-border bg-canvas-elevated/40 text-canvas-text-secondary hover:text-canvas-text hover:border-canvas-text-secondary'
+                }`}
               >
-                <div className="surface-card p-8 md:p-12 rounded-xl transition-all duration-300 hover:border-accent-bright/50">
-                  <div className="mb-4">
-                    <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-accent-bright/10 border border-accent-bright/30">
-                      <div className="w-1 h-1 rounded-full bg-accent-bright" />
-                      <span className="text-xs font-mono text-accent-bright uppercase tracking-wider">
-                        {project.domain}
-                      </span>
-                    </span>
-                  </div>
-
-                  <h2 className="text-3xl md:text-4xl font-heading font-bold mb-4 group-hover:accent-text transition-colors duration-300">
-                    {project.title}
-                  </h2>
-
-                  <p className="text-lg text-canvas-text-secondary mb-6">
-                    {project.description}
-                  </p>
-
-                  <div className="flex items-center gap-2 text-accent-bright font-mono text-sm uppercase tracking-wider group-hover:gap-3 transition-all duration-300">
-                    <span>Read Case Study</span>
-                    <span>→</span>
-                  </div>
-                </div>
-              </Link>
+                {opt.label}
+              </button>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <section className="py-12 md:py-16 px-4 border-t border-canvas-border/20">
-        <div className="max-w-6xl mx-auto text-center">
-          <p className="text-sm text-canvas-text-tertiary">
-            More projects coming soon. Interested in working together?
-          </p>
+      {/* Projects Grid */}
+      <section className="py-12 md:py-20 px-6 border-t border-canvas-border/20">
+        <div className="max-w-5xl mx-auto">
+          {filteredProjects.length > 0 ? (
+            <div className="grid md:grid-cols-2 gap-6 lg:gap-8">
+              {filteredProjects.map((project, idx) => (
+                <ScrollReveal
+                  key={project.slug}
+                  animation="fade-up"
+                  delay={idx * 0.05}
+                >
+                  <ProjectCard
+                    title={project.title}
+                    description={`${project.track} pipeline element. Built utilizing high-performance layouts.`}
+                    domain={project.domain}
+                    href={`/work/${project.slug}`}
+                    accentHue={project.accentHue}
+                  />
+                </ScrollReveal>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-20 font-mono text-sm text-canvas-text-tertiary">
+              // no_projects_found_in_category
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Footer Info HUD */}
+      <section className="py-16 md:py-24 px-6 border-t border-canvas-border/10">
+        <div className="max-w-5xl mx-auto flex items-center justify-center font-mono text-[9px] text-canvas-text-tertiary uppercase select-none">
+          <span>// index.total_projects_compiled: {filteredProjects.length} / {projectsMetadata.length}</span>
         </div>
       </section>
     </main>
-  )
+  );
 }

@@ -1,0 +1,50 @@
+{
+  "hero": {
+    "backHref": "/work",
+    "domain": "Health Informatics / Expert Systems",
+    "title": "NutriLogic Expert System",
+    "subtitle": "A rule-based nutrition intelligence engine tailored to East African dietary contexts and consumer decision support."
+  },
+  "origin": {
+    "pullQuote": "Health guidance becomes useful only when it reflects local food realities.",
+    "paragraphs": [
+      "NutriLogic was initiated to bridge a localization gap in consumer nutrition tools: many systems provide generic advice that ignores culturally specific ingredients, meal patterns, and affordability constraints.",
+      "The project uses an expert-system approach to encode transparent dietary logic that can be reviewed, refined, and adapted as new regional nutrition knowledge is introduced."
+    ]
+  },
+  "architecture": {
+    "title": "Rule-Driven Dietary Inference Layer",
+    "description": "A knowledge-base architecture that evaluates food profiles against condition-aware nutrition rules.",
+    "codeBlocks": [
+      {
+        "filename": "rules.py",
+        "language": "python",
+        "code": "from dataclasses import dataclass\n\n@dataclass\nclass Food:\n    name: str\n    sugar_g: float\n    sodium_mg: float\n\n\ndef evaluate_for_hypertension(food: Food) -> str:\n    if food.sodium_mg > 400:\n        return \"limit\"\n    return \"ok\""
+      }
+    ],
+    "narrative": "The system separates knowledge representation from inference execution. Nutritional rules are encoded in explicit condition-action structures, making outcomes explainable and easier to audit. Input normalization layers convert user-provided meal context into standard attributes before rule evaluation, enabling consistent recommendations."
+  },
+  "hardParts": {
+    "title": "Resolving Conflicting Nutrition Rules Across Conditions",
+    "description": "The core challenge was handling contradictory recommendations for users with multiple dietary constraints.",
+    "codeBlocks": [
+      {
+        "filename": "conflict_resolver.ts",
+        "language": "typescript",
+        "code": "type Verdict = \"recommend\" | \"caution\" | \"avoid\"\n\nexport function mergeVerdicts(v: Verdict[]): Verdict {\n  if (v.includes(\"avoid\")) return \"avoid\"\n  if (v.includes(\"caution\")) return \"caution\"\n  return \"recommend\"\n}"
+      }
+    ],
+    "narrative": "Single-condition logic worked well, but multi-condition profiles produced recommendation conflicts. The fix introduced a precedence and conflict-resolution layer that merges condition-specific outputs into a consistent final verdict, while preserving traceability of why that verdict was chosen.",
+    "reverseLayout": true
+  },
+  "metrics": {
+    "metrics": [
+      { "label": "Rule Coverage", "value": "99.2%" },
+      { "label": "Conflict Resolution", "value": "100%" },
+      { "label": "Recommendation Rec.", "value": "91.8%" }
+    ],
+    "nextProjectTitle": "Dira AR Pathfinder",
+    "nextProjectHref": "/work/dira",
+    "nextProjectSubtitle": "Spatial navigation and agentic vision guides"
+  }
+}

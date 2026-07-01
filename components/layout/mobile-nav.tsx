@@ -1,8 +1,8 @@
 'use client'
 
-import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Home, Briefcase, Mail, Settings } from 'lucide-react'
+import { Home, Briefcase, Mail, User } from 'lucide-react'
+import { TransitionLink } from '@/components/transitions/TransitionLink'
 import { cn } from '@/lib/utils'
 
 export function MobileNav() {
@@ -10,9 +10,9 @@ export function MobileNav() {
 
   const navItems = [
     { icon: Home, label: 'Home', href: '/' },
-    { icon: Briefcase, label: 'Work', href: '#portfolio' },
-    { icon: Mail, label: 'Contact', href: '#contact' },
-    { icon: Settings, label: 'Settings', href: '#settings' },
+    { icon: Briefcase, label: 'Work', href: '/work' },
+    { icon: User, label: 'About', href: '/about' },
+    { icon: Mail, label: 'Contact', href: '/contact' },
   ]
 
   return (
@@ -24,19 +24,19 @@ export function MobileNav() {
             const isActive = pathname === item.href
 
             return (
-              <Link
+              <TransitionLink
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  'flex flex-col items-center justify-center gap-1 w-16 h-16 rounded-lg transition-all duration-200',
+                  'flex flex-col items-center justify-center gap-1 w-16 h-12 rounded-lg transition-all duration-200',
                   isActive
                     ? 'text-accent-bright bg-accent-bright/10'
                     : 'text-canvas-text-secondary hover:text-canvas-text hover:bg-canvas-elevated/30'
                 )}
               >
                 <Icon className="w-5 h-5" />
-                <span className="text-xs font-medium font-mono">{item.label}</span>
-              </Link>
+                <span className="text-[10px] font-medium font-mono">{item.label}</span>
+              </TransitionLink>
             )
           })}
         </div>

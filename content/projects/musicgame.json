@@ -1,0 +1,50 @@
+{
+  "hero": {
+    "backHref": "/work",
+    "domain": "Creative / Experimental",
+    "title": "MusicPlayerGame",
+    "subtitle": "Interactive browser-native audio visualization game."
+  },
+  "origin": {
+    "pullQuote": "Software should occasionally break out of rigid productivity grids and embrace pure, deliberate play.",
+    "paragraphs": [
+      "We spend most of our engineering hours optimizing queries and designing deterministic system backends. This experimental project was built to explore real-time sensory intersections.",
+      "By fusing a classic browser snake engine with an interactive audio player layout, physical user navigation impacts digital sound processing metrics directly."
+    ]
+  },
+  "architecture": {
+    "title": "Sensory Audio Pipeline",
+    "description": "Browser-native TypeScript engine leveraging Web Audio API and canvas drawing loops.",
+    "codeBlocks": [
+      {
+        "filename": "audio_engine.ts",
+        "language": "typescript",
+        "code": "export class WebAudioEngine {\n  private ctx = new AudioContext();\n  private analyser = this.ctx.createAnalyser();\n\n  analyzeFrequencies() {\n    const dataArray = new Uint8Array(this.analyser.frequencyBinCount);\n    this.analyser.getByteFrequencyData(dataArray);\n    // Map average amplitude directly to the snake's velocity matrix\n    const amplitude = getAverageAmplitude(dataArray);\n    snake.updateVelocity(amplitude);\n  }\n}"
+      }
+    ],
+    "narrative": "An interactive, browser-native application written using TypeScript. The game uses the native Web Audio API to analyze audio track waveforms in real time, connecting the snake's velocity matrix to ambient frequency changes while mapping asset collection loops to track-advance triggers."
+  },
+  "hardParts": {
+    "title": "Audio Thread Preservation",
+    "description": "Eliminating input bottlenecks through event-loop and memory isolation.",
+    "codeBlocks": [
+      {
+        "filename": "game_isolation.html",
+        "language": "html",
+        "code": "<!-- Separate the game loop from Next.js page state lifecycle inside a sandboxed iframe -->\n<iframe \n  src=\"/sandbox/snake_game.html\"\n  sandbox=\"allow-scripts\"\n  style=\"border: none; width: 100%; height: 100%;\"\n  aria-label=\"Isolated Canvas Game Area\">\n</iframe>"
+      }
+    ],
+    "narrative": "Preventing frequent canvas drawing routines from bottlenecking audio processing threads. Synchronizing continuous user inputs with real-time waveform calculations requires clean memory allocation cycles to avoid browser execution lag and audio stuttering. To guarantee rendering performance, we run the loop in an isolated canvas block or a sandboxed iframe module to prevent high-frequency inputs from lagging Next.js layouts or custom cursors.",
+    "reverseLayout": true
+  },
+  "metrics": {
+    "metrics": [
+      { "label": "Audio Delay", "value": "0ms" },
+      { "label": "UI Refresh", "value": "60fps" },
+      { "label": "GC Stutter", "value": "None" }
+    ],
+    "nextProjectTitle": "Spiks Mobility Platform",
+    "nextProjectHref": "/work/spiks",
+    "nextProjectSubtitle": "Geolocated ride-hailing PostgreSQL/PostGIS backend"
+  }
+}

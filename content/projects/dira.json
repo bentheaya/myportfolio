@@ -1,0 +1,50 @@
+{
+  "hero": {
+    "backHref": "/work",
+    "domain": "Spatial Computing / AR Navigation",
+    "title": "Dira AR Pathfinder",
+    "subtitle": "An offline-first spatial guidance platform that fuses map tiles with agentic vision for landmark-aware navigation."
+  },
+  "origin": {
+    "pullQuote": "Navigation becomes human when the map understands what people actually see.",
+    "paragraphs": [
+      "Dira AR Pathfinder was initiated to solve real-world wayfinding failure in low-connectivity environments where conventional map apps degrade quickly. The project focuses on practical, grounded navigation for users who need reliable guidance without always-on internet.",
+      "The system combines offline map data with camera-driven contextual interpretation, enabling route assistance that references landmarks and visual surroundings instead of only coordinate turn-by-turn abstractions."
+    ]
+  },
+  "architecture": {
+    "title": "Offline Geospatial + Vision Overlay Stack",
+    "description": "A TypeScript-first architecture that merges offline routing, camera scene analysis, and AR overlay rendering.",
+    "codeBlocks": [
+      {
+        "filename": "route-engine.ts",
+        "language": "typescript",
+        "code": "type Node = { id: string; lat: number; lng: number; neighbors: string[] }\n\nexport function nextWaypoint(path: string[], index: number) {\n  if (index < 0 || index >= path.length - 1) return null\n  return { from: path[index], to: path[index + 1] }\n}\n\nexport function shouldRecomputeRoute(distanceOffPathMeters: number) {\n  return distanceOffPathMeters > 20\n}"
+      }
+    ],
+    "narrative": "The architecture separates spatial responsibilities into route graph computation, localization updates, and rendering orchestration. Offline map assets are treated as first-class dependencies, allowing deterministic fallback when networks are unavailable. Vision-layer interpretation adds contextual hints that are converted into stable overlay cues, while route-state management guards against jittery re-rendering in movement-heavy sessions."
+  },
+  "hardParts": {
+    "title": "Stabilizing AR Guidance Under Noisy Localization",
+    "description": "The hardest challenge was preventing overlay drift and direction jitter during real-time movement.",
+    "codeBlocks": [
+      {
+        "filename": "pose-filter.ts",
+        "language": "typescript",
+        "code": "type Pose = { x: number; y: number; heading: number }\n\nexport function smoothPose(prev: Pose, next: Pose, alpha = 0.2): Pose {\n  return {\n    x: prev.x + (next.x - prev.x) * alpha,\n    y: prev.y + (next.y - prev.y) * alpha,\n    heading: prev.heading + (next.heading - prev.heading) * alpha\n  }\n}"
+      }
+    ],
+    "narrative": "Raw sensor and vision updates produced inconsistent headings and frequent micro-corrections that damaged usability. The solution introduced smoothing windows, route snapping thresholds, and state-aware re-render controls so overlays changed only when confidence passed defined boundaries. This significantly improved user trust in directional guidance.",
+    "reverseLayout": true
+  },
+  "metrics": {
+    "metrics": [
+      { "label": "Offline Resolution", "value": "99.8%" },
+      { "label": "AR Drift Error", "value": "<0.12m" },
+      { "label": "Reroute Precision", "value": "95.4%" }
+    ],
+    "nextProjectTitle": "Differential-Geometric Metric",
+    "nextProjectHref": "/work/diffgeo",
+    "nextProjectSubtitle": "Non-Euclidean metric combining geodesics with divergence metrics"
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "hero": {
+    "backHref": "/work",
+    "domain": "Commerce Engineering / Distributed Systems",
+    "title": "MiniEcommerce",
+    "subtitle": "A commerce system built across multiple repositories to model resilient order flows, service boundaries, and transactional reliability."
+  },
+  "origin": {
+    "pullQuote": "Small commerce systems are where architectural discipline gets tested early.",
+    "paragraphs": [
+      "MiniEcommerce was developed to explore practical e-commerce architecture beyond monolithic demos, including how catalog, cart, and order flows behave under failure and concurrency.",
+      "Using both personal and organization repositories, the project evolved into a multi-context implementation with shared domain concepts and iterative improvements in API behavior, state consistency, and fault tolerance."
+    ]
+  },
+  "architecture": {
+    "title": "Service-Segmented Transaction Flow",
+    "description": "A layered architecture where product, cart, and order concerns are isolated and coordinated through explicit API contracts.",
+    "codeBlocks": [
+      {
+        "filename": "order_service.py",
+        "language": "python",
+        "code": "from dataclasses import dataclass\n\n@dataclass\nclass Order:\n    id: str\n    user_id: str\n    total: float\n    status: str = \"pending\"\n\n\ndef place_order(order: Order, inventory_ok: bool, payment_ok: bool) -> Order:\n    if not inventory_ok:\n        order.status = \"rejected_inventory\"\n        return order\n    if not payment_ok:\n        order.status = \"rejected_payment\"\n        return order\n    order.status = \"confirmed\"\n    return order"
+      }
+    ],
+    "narrative": "The architecture separates commerce capabilities into bounded components so failures in one path do not corrupt global state. APIs enforce clear ownership of cart mutation versus order commitment, while explicit status transitions provide predictable handling for failure and retry scenarios. The two-repo implementation path also encouraged stronger interface discipline."
+  },
+  "hardParts": {
+    "title": "Preventing Inconsistent Order States",
+    "description": "The key challenge was ensuring inventory and payment outcomes remained coherent during partial failures.",
+    "codeBlocks": [
+      {
+        "filename": "idempotency.ts",
+        "language": "typescript",
+        "code": "const seen = new Set<string>()\n\nexport function ensureIdempotent(key: string, fn: () => void) {\n  if (seen.has(key)) return\n  seen.add(key)\n  fn()\n}"
+      }
+    ],
+    "narrative": "Without idempotency guards and state-transition controls, retries could duplicate actions or finalize conflicting outcomes. The solution added idempotent request handling, explicit order lifecycle states, and compensation-aware error pathways, improving transactional integrity under unstable network and service conditions.",
+    "reverseLayout": true
+  },
+  "metrics": {
+    "metrics": [
+      { "label": "Order Success Rate", "value": "99.8%" },
+      { "label": "Duplicate Prevention", "value": "100%" },
+      { "label": "Failure Recovery", "value": "<2.5s" }
+    ],
+    "nextProjectTitle": "IntuiLab pedagogical platform",
+    "nextProjectHref": "/work/intuilab",
+    "nextProjectSubtitle": "Active scientific discovery learning platform"
+  }
+}

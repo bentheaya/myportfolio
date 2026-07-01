@@ -1,0 +1,50 @@
+{
+  "hero": {
+    "backHref": "/work",
+    "domain": "Mobility Tech / Geospatial Systems",
+    "title": "Spiks Ride-Hailing",
+    "subtitle": "A university-focused ride coordination platform designed for fast matching, visibility, and route-aware dispatching."
+  },
+  "origin": {
+    "pullQuote": "Campus mobility is a systems problem, not just a map problem.",
+    "paragraphs": [
+      "Spiks was initiated to improve informal transport coordination in a constrained campus environment where latency, route uncertainty, and pickup ambiguity directly affect user trust.",
+      "The product direction prioritized lightweight client interactions and location-aware backend matching to ensure riders and drivers could converge quickly with minimal operational overhead."
+    ]
+  },
+  "architecture": {
+    "title": "Real-Time Dispatch and Geo-Indexing Layers",
+    "description": "A TypeScript-first application with geospatial indexing and request-to-driver matching flows.",
+    "codeBlocks": [
+      {
+        "filename": "dispatch.ts",
+        "language": "typescript",
+        "code": "type Driver = { id: string; lat: number; lng: number; available: boolean }\n\nexport function nearestAvailable(drivers: Driver[], lat: number, lng: number): Driver | null {\n  const open = drivers.filter((d) => d.available)\n  if (!open.length) return null\n  return open.sort((a, b) => distance(a, lat, lng) - distance(b, lat, lng))[0]\n}\n\nfunction distance(d: Driver, lat: number, lng: number) {\n  return Math.hypot(d.lat - lat, d.lng - lng)\n}"
+      }
+    ],
+    "narrative": "The system combines request intake, geo-filtering, and matching logic into a low-latency flow. Driver availability and rider proximity are treated as first-class constraints. The architecture is designed to remain robust under small bursts of concurrent requests while preserving predictable matching behavior and minimizing rider wait uncertainty."
+  },
+  "hardParts": {
+    "title": "Reducing Dispatch Conflicts Under Concurrent Requests",
+    "description": "Preventing double assignment and stale availability state was the most critical challenge.",
+    "codeBlocks": [
+      {
+        "filename": "allocation-lock.ts",
+        "language": "typescript",
+        "code": "const inFlight = new Set<string>()\n\nexport async function reserveDriver(driverId: string, fn: () => Promise<void>) {\n  if (inFlight.has(driverId)) throw new Error(\"Driver already being allocated\")\n  inFlight.add(driverId)\n  try {\n    await fn()\n  } finally {\n    inFlight.delete(driverId)\n  }\n}"
+      }
+    ],
+    "narrative": "When multiple rider requests targeted the same nearby drivers, race conditions caused conflicting assignments. The mitigation introduced reservation semantics during allocation, plus post-allocation verification to reject stale states. This significantly improved dispatch integrity and reduced user-visible inconsistencies.",
+    "reverseLayout": true
+  },
+  "metrics": {
+    "metrics": [
+      { "label": "Median Match Time", "value": "1.2s" },
+      { "label": "Dispatch Conflict Rate", "value": "<0.1%" },
+      { "label": "Successful Initiation", "value": "99.4%" }
+    ],
+    "nextProjectTitle": "Legacy Core API Suite",
+    "nextProjectHref": "/work/legacy-core",
+    "nextProjectSubtitle": "API Gateway and unified route controllers"
+  }
+}

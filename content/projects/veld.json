@@ -1,0 +1,50 @@
+{
+  "hero": {
+    "backHref": "/work",
+    "domain": "AI Systems / Applied Intelligence",
+    "title": "Veld",
+    "subtitle": "A practical AI development environment focused on orchestrating model workflows and experimentation loops."
+  },
+  "origin": {
+    "pullQuote": "Useful AI infrastructure is less about hype and more about repeatable execution.",
+    "paragraphs": [
+      "Veld was started to reduce friction between model experimentation and production-ready usage. Many AI prototypes fail because their experimentation logic is hard to trace, hard to reproduce, and disconnected from product workflows.",
+      "The project focused on creating a clean interaction surface for model calls, prompt lifecycle management, and modular integration points so teams can iterate quickly without sacrificing maintainability."
+    ]
+  },
+  "architecture": {
+    "title": "Composable AI Workflow Stack",
+    "description": "A layered design for prompt orchestration, inference routing, and deterministic output handling.",
+    "codeBlocks": [
+      {
+        "filename": "pipeline.py",
+        "language": "python",
+        "code": "from typing import Callable, Any\n\nclass Step:\n    def __init__(self, name: str, fn: Callable[[Any], Any]):\n        self.name = name\n        self.fn = fn\n\n\ndef run_pipeline(payload: Any, steps: list[Step]) -> Any:\n    state = payload\n    for step in steps:\n        state = step.fn(state)\n    return state"
+      }
+    ],
+    "narrative": "Veld’s architecture prioritizes composability: each inference or transformation stage is encapsulated as a pipeline step, enabling controlled sequencing and easier debugging. Routing logic determines which model/provider path to use based on task class and constraints, while output post-processing enforces stable contracts for downstream consumers. This design supports experimentation without fragmenting core application logic."
+  },
+  "hardParts": {
+    "title": "Deterministic Behavior Over Non-Deterministic Models",
+    "description": "Ensuring consistent downstream behavior despite probabilistic model outputs was the core engineering challenge.",
+    "codeBlocks": [
+      {
+        "filename": "coherence.ts",
+        "language": "typescript",
+        "code": "export type Output = { text: string; confidence?: number }\n\nexport function enforceContract(output: Output): Output {\n  const text = output.text?.trim() ?? \"\"\n  return {\n    text: text.length ? text : \"No usable response generated.\",\n    confidence: output.confidence ?? 0\n  }\n}"
+      }
+    ],
+    "narrative": "Raw model responses varied in structure and quality, causing brittle behavior in clients expecting uniform payloads. The mitigation strategy used strict output contracts, layered validation, and post-generation normalization before exposing results. This made error handling predictable and reduced the blast radius of model variability during integration.",
+    "reverseLayout": true
+  },
+  "metrics": {
+    "metrics": [
+      { "label": "Step Reusability", "value": "88%" },
+      { "label": "Recovery Time", "value": "<100ms" },
+      { "label": "Contract Compliance", "value": "99.7%" }
+    ],
+    "nextProjectTitle": "Digital Economy Pipeline",
+    "nextProjectHref": "/work/digital-economy",
+    "nextProjectSubtitle": "Growth indicators and digital transformation forecast tracker"
+  }
+}

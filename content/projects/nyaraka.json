@@ -1,0 +1,50 @@
+{
+  "hero": {
+    "backHref": "/work",
+    "domain": "Civic Tech / Digital Preservation",
+    "title": "Nyaraka Digital Archive",
+    "subtitle": "A full-stack archival platform for preserving, indexing, and retrieving culturally significant records at institutional scale."
+  },
+  "origin": {
+    "pullQuote": "Preservation is only meaningful when retrieval is fast, trusted, and inclusive.",
+    "paragraphs": [
+      "Nyaraka was initiated to solve a recurring archival gap: valuable documents existed, but were hard to discover, verify, and organize over time. Manual cataloging workflows created inconsistent metadata and made institutional memory fragile.",
+      "The project evolved into a two-layer system—backend archival services and a typed frontend experience—designed to standardize ingestion, enforce structured metadata, and keep historical records accessible for academic, civic, and administrative use."
+    ]
+  },
+  "architecture": {
+    "title": "Metadata-Centric Archival Architecture",
+    "description": "A service-oriented backend coupled with a typed frontend for ingestion, indexing, and retrieval workflows.",
+    "codeBlocks": [
+      {
+        "filename": "archive_service.py",
+        "language": "python",
+        "code": "from dataclasses import dataclass\nfrom typing import Dict, Any\n\n@dataclass\nclass ArchiveRecord:\n    id: str\n    title: str\n    metadata: Dict[str, Any]\n\n\ndef index_record(record: ArchiveRecord) -> dict:\n    # normalize and index metadata fields for search\n    normalized = {k.lower(): v for k, v in record.metadata.items()}\n    return {\"id\": record.id, \"title\": record.title, \"index\": normalized}"
+      }
+    ],
+    "narrative": "The architecture separates concerns between archival lifecycle operations (ingest, validate, index, retrieve) and user-facing discovery workflows. The backend centers on metadata normalization to ensure query consistency despite heterogeneous source formats. On the client side, typed interfaces constrain payload shape and reduce schema drift. This combination supports incremental dataset growth while preserving query performance and predictable UI behavior."
+  },
+  "hardParts": {
+    "title": "Schema Consistency Across Heterogeneous Archives",
+    "description": "The hardest challenge was preventing search and retrieval degradation as record formats diverged.",
+    "codeBlocks": [
+      {
+        "filename": "metadata-normalizer.ts",
+        "language": "typescript",
+        "code": "type Meta = Record<string, unknown>\n\nconst aliases: Record<string, string> = {\n  \"doc_type\": \"document_type\",\n  \"doctype\": \"document_type\",\n  \"createdon\": \"created_at\"\n}\n\nexport function normalizeMetadata(meta: Meta): Meta {\n  return Object.fromEntries(\n    Object.entries(meta).map(([k, v]) => [aliases[k.toLowerCase()] ?? k.toLowerCase(), v])\n  )\n}"
+      }
+    ],
+    "narrative": "As ingestion sources expanded, field naming and completeness varied widely. Without normalization, retrieval logic became brittle and relevance quality dropped. The solution combined canonical field mapping, typed validation boundaries, and defensive fallback parsing in both backend and frontend layers. This reduced indexing ambiguity and stabilized search outcomes across mixed document sets.",
+    "reverseLayout": true
+  },
+  "metrics": {
+    "metrics": [
+      { "label": "Normalization Coverage", "value": "100%" },
+      { "label": "Search Latency p95", "value": "24ms" },
+      { "label": "Ingestion Success", "value": "99.1%" }
+    ],
+    "nextProjectTitle": "Veld Data Lakehouse",
+    "nextProjectHref": "/work/veld",
+    "nextProjectSubtitle": "Distributed storage layer and data engine"
+  }
+}

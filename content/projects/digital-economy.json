@@ -1,0 +1,50 @@
+{
+  "hero": {
+    "backHref": "/work",
+    "domain": "Data Science / Economic Intelligence",
+    "title": "Digital Economy Pipeline",
+    "subtitle": "A data-driven pipeline for monitoring, modeling, and communicating digital economy growth signals."
+  },
+  "origin": {
+    "pullQuote": "What gets measured well can be improved responsibly.",
+    "paragraphs": [
+      "The project began from a policy and analytics need: digital transformation advances unevenly, yet decision makers often lack structured signals showing where progress is accelerating or stalling.",
+      "This repository was developed to collect indicators, clean and transform them, and produce interpretable analytical outputs that can support evidence-based strategy in public and private ecosystems."
+    ]
+  },
+  "architecture": {
+    "title": "Notebook-to-Pipeline Analytical Stack",
+    "description": "A structured analysis flow for ingestion, feature preparation, and interpretable forecasting outputs.",
+    "codeBlocks": [
+      {
+        "filename": "transform.py",
+        "language": "python",
+        "code": "import pandas as pd\n\n\ndef build_features(df: pd.DataFrame) -> pd.DataFrame:\n    out = df.copy()\n    out[\"internet_penetration_pct\"] = out[\"internet_users\"] / out[\"population\"] * 100\n    out[\"gdp_per_capita\"] = out[\"gdp\"] / out[\"population\"]\n    return out"
+      }
+    ],
+    "narrative": "The architecture follows a classic data pipeline pattern: source data ingestion, quality checks, feature engineering, and modeling/visualization. Emphasis was placed on transparent transformations so that analytical conclusions remain explainable. By preserving explicit feature construction and traceable preprocessing, the pipeline supports both experimentation and reproducible reporting."
+  },
+  "hardParts": {
+    "title": "Balancing Signal Quality with Sparse Regional Data",
+    "description": "The hardest issue was avoiding misleading outputs when key indicators were incomplete or uneven across sources.",
+    "codeBlocks": [
+      {
+        "filename": "impute.ts",
+        "language": "typescript",
+        "code": "type Row = { year: number; value: number | null }\n\nexport function forwardFill(series: Row[]): Row[] {\n  let last: number | null = null\n  return series.map((r) => {\n    if (r.value !== null) last = r.value\n    return { ...r, value: r.value ?? last }\n  })\n}"
+      }
+    ],
+    "narrative": "Economic indicators were often missing or reported at inconsistent intervals. Naively aggregating them introduced distortion in trend inference. The solution combined explicit missingness handling, cautious imputation strategy, and documentation of confidence boundaries. This reduced overclaiming and improved trust in downstream interpretation.",
+    "reverseLayout": true
+  },
+  "metrics": {
+    "metrics": [
+      { "label": "Feature Completeness", "value": "92.5%" },
+      { "label": "Pipeline Repr.", "value": "100%" },
+      { "label": "Forecast MAE", "value": "0.042" }
+    ],
+    "nextProjectTitle": "Collaborative Contributions",
+    "nextProjectHref": "/work/collab",
+    "nextProjectSubtitle": "Open-source packages and organization repos"
+  }
+}

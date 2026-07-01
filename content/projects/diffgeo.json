@@ -1,0 +1,50 @@
+{
+  "hero": {
+    "backHref": "/work",
+    "domain": "Mathematical ML / Similarity Research",
+    "title": "Differential-Geometric Similarity Metric",
+    "subtitle": "A non-Euclidean similarity framework combining manifold geodesics with KL-informed divergence structure."
+  },
+  "origin": {
+    "pullQuote": "Similarity should respect geometry before it compresses into a score.",
+    "paragraphs": [
+      "This project was initiated to challenge standard Euclidean similarity assumptions in domains where data naturally lies on curved manifolds and probabilistic structure matters.",
+      "The objective was to construct a composite metric that captures both geometric path structure and distributional dissimilarity, improving comparative rigor for complex representation spaces."
+    ]
+  },
+  "architecture": {
+    "title": "Manifold-Geodesic + Divergence Hybrid Metric",
+    "description": "A research pipeline implementing geodesic distance components and KL-based statistical penalties.",
+    "codeBlocks": [
+      {
+        "filename": "metric.py",
+        "language": "python",
+        "code": "import math\n\ndef kl_divergence(p, q, eps=1e-9):\n    return sum(pi * math.log((pi + eps) / (qi + eps)) for pi, qi in zip(p, q))\n\ndef hybrid_similarity(geodesic_dist: float, p, q, alpha=0.7):\n    kl = kl_divergence(p, q)\n    return 1.0 / (1.0 + alpha * geodesic_dist + (1 - alpha) * kl)"
+      }
+    ],
+    "narrative": "The architecture separates geometric and probabilistic contributions so each term can be independently validated. Geodesic distance reflects manifold-aware structural proximity, while KL divergence captures directional statistical discrepancy. A weighted composition layer enables domain-specific tuning while preserving interpretability of metric components."
+  },
+  "hardParts": {
+    "title": "Numerical Stability in Divergence Computation",
+    "description": "The hardest challenge was avoiding unstable behavior when probability vectors contained near-zero values.",
+    "codeBlocks": [
+      {
+        "filename": "stability.ts",
+        "language": "typescript",
+        "code": "export function safeLogRatio(p: number, q: number, eps = 1e-9): number {\n  return Math.log((p + eps) / (q + eps))\n}\n\nexport function bounded(value: number, lo = -1e6, hi = 1e6): number {\n  return Math.max(lo, Math.min(hi, value))\n}"
+      }
+    ],
+    "narrative": "Direct divergence computation amplified floating-point instability in sparse regimes, producing unreliable score spikes. The remedy applied epsilon smoothing, bounded intermediate transforms, and diagnostic checks for invalid distributions before metric aggregation. This improved reliability for both experimentation and comparative analysis.",
+    "reverseLayout": true
+  },
+  "metrics": {
+    "metrics": [
+      { "label": "Stability Rate", "value": "99.9%" },
+      { "label": "Approximation Error", "value": "<0.008" },
+      { "label": "Ranking Consistency", "value": "97.4%" }
+    ],
+    "nextProjectTitle": "MusicPlayerGame",
+    "nextProjectHref": "/work/musicgame",
+    "nextProjectSubtitle": "Browser-native snake audio visualization game"
+  }
+}

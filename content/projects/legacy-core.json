@@ -1,0 +1,50 @@
+{
+  "hero": {
+    "backHref": "/work",
+    "domain": "Backend Platform / API Infrastructure",
+    "title": "API-GateWay",
+    "subtitle": "A unified API edge service handling routing, request policy enforcement, and resilient service orchestration."
+  },
+  "origin": {
+    "pullQuote": "A good gateway is an architecture multiplier: simpler clients, safer services.",
+    "paragraphs": [
+      "API-GateWay was built to centralize cross-cutting concerns that were otherwise duplicated across services, including auth checks, request shaping, and failure handling.",
+      "The goal was to establish a clear edge-control layer that could route traffic intelligently while protecting backend services from malformed input and uncontrolled fan-out."
+    ]
+  },
+  "architecture": {
+    "title": "Edge Routing and Policy Enforcement Layer",
+    "description": "A gateway architecture that maps incoming routes to downstream services with shared middleware controls.",
+    "codeBlocks": [
+      {
+        "filename": "gateway.ts",
+        "language": "typescript",
+        "code": "type RouteMap = Record<string, string>\n\nconst routes: RouteMap = {\n  \"/orders\": \"http://orders-service\",\n  \"/products\": \"http://catalog-service\"\n}\n\nexport function resolveTarget(path: string): string | null {\n  const entry = Object.entries(routes).find(([prefix]) => path.startsWith(prefix))\n  return entry ? entry[1] : null\n}"
+      }
+    ],
+    "narrative": "The gateway isolates traffic management and policy checks at the platform edge. Route resolution, authentication middleware, and response normalization are treated as composable stages, enabling consistent client behavior and reducing duplicated logic in downstream services. This architecture also simplifies future observability and rate-governance integration."
+  },
+  "hardParts": {
+    "title": "Containing Failure Propagation Across Downstream Services",
+    "description": "The key challenge was preventing partial outages in one service from cascading to platform-wide failure.",
+    "codeBlocks": [
+      {
+        "filename": "circuit.ts",
+        "language": "typescript",
+        "code": "type State = \"closed\" | \"open\" | \"half-open\"\n\nexport function nextCircuitState(failures: number, threshold: number): State {\n  if (failures >= threshold) return \"open\"\n  return \"closed\"\n}"
+      }
+    ],
+    "narrative": "As the gateway became the shared ingress point, downstream instability threatened global reliability. To mitigate this, protective controls were introduced: timeout boundaries, retry policies, and circuit-breaker patterns to isolate failing dependencies. This reduced cascading failures and improved edge-level resilience under stress conditions.",
+    "reverseLayout": true
+  },
+  "metrics": {
+    "metrics": [
+      { "label": "Throughput", "value": "12.5k rps" },
+      { "label": "Containment Rate", "value": "99.9%" },
+      { "label": "Routing Overhead", "value": "<0.4ms" }
+    ],
+    "nextProjectTitle": "MiniEcommerce",
+    "nextProjectHref": "/work/miniecommerce",
+    "nextProjectSubtitle": "Distributed event-driven microservices analysis"
+  }
+}

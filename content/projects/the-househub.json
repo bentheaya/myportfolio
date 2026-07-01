@@ -1,0 +1,50 @@
+{
+  "hero": {
+    "backHref": "/work",
+    "domain": "PropTech / Housing Platforms",
+    "title": "THE-HOUSEHUB",
+    "subtitle": "A property discovery and listing platform focused on clear inventory browsing, trust signals, and conversion-ready housing workflows."
+  },
+  "origin": {
+    "pullQuote": "Housing search should reduce uncertainty, not increase it.",
+    "paragraphs": [
+      "THE-HOUSEHUB was initiated to solve a familiar market gap: property seekers often navigate fragmented listings with inconsistent detail, weak verification cues, and poor communication loops.",
+      "The platform was designed to streamline listing discovery, improve listing clarity, and support practical decision-making through better structured property data and responsive interaction pathways."
+    ]
+  },
+  "architecture": {
+    "title": "Listing-Centric Frontend and Data Flow",
+    "description": "A modular web architecture for listing retrieval, filterable search, detail rendering, and inquiry actions.",
+    "codeBlocks": [
+      {
+        "filename": "listing-store.ts",
+        "language": "typescript",
+        "code": "type Listing = { id: string; price: number; location: string; rooms: number }\n\nexport function filterListings(listings: Listing[], q: { min?: number; max?: number; rooms?: number }) {\n  return listings.filter((l) => {\n    if (q.min != null && l.price < q.min) return false\n    if (q.max != null && l.price > q.max) return false\n    if (q.rooms != null && l.rooms !== q.rooms) return false\n    return true\n  })\n}"
+      }
+    ],
+    "narrative": "The architecture centers on predictable listing state: fetch, normalize, filter, and render. Listing and inquiry concerns are decoupled so search interactions remain fast while communication actions can be handled asynchronously. The result is a smoother browse-to-contact flow with reduced state coupling and clearer UI ownership boundaries."
+  },
+  "hardParts": {
+    "title": "Maintaining Search Responsiveness with Rich Filters",
+    "description": "The hardest challenge was preserving UI speed while applying compound filters over growing listing datasets.",
+    "codeBlocks": [
+      {
+        "filename": "memoized-filter.ts",
+        "language": "typescript",
+        "code": "const cache = new Map<string, unknown>()\n\nexport function cachedFilter<T>(key: string, compute: () => T): T {\n  if (cache.has(key)) return cache.get(key) as T\n  const value = compute()\n  cache.set(key, value)\n  return value\n}"
+      }
+    ],
+    "narrative": "As filters became richer (budget ranges, room counts, location facets), repeated recomputation degraded interaction smoothness. The mitigation introduced normalized query signatures, memoized filter stages, and incremental rendering patterns, significantly improving perceived responsiveness on repeated query changes.",
+    "reverseLayout": true
+  },
+  "metrics": {
+    "metrics": [
+      { "label": "Search p95 Latency", "value": "18ms" },
+      { "label": "Filter Interaction", "value": "<4ms" },
+      { "label": "Conversion Rate", "value": "11.2%" }
+    ],
+    "nextProjectTitle": "IntuiLab pedagogical platform",
+    "nextProjectHref": "/work/intuilab",
+    "nextProjectSubtitle": "Active scientific discovery learning platform"
+  }
+}

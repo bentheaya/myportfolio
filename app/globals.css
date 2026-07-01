@@ -310,6 +310,52 @@
     animation: slideInDown 0.3s ease-out;
   }
 
+  @keyframes traveling-dot {
+    0% { transform: translateY(-100%); }
+    75% { transform: translateY(400%); }
+    100% { transform: translateY(400%); }
+  }
+
+  .animate-traveling-dot {
+    animation: traveling-dot 2s cubic-bezier(0.76, 0, 0.24, 1) infinite;
+  }
+
+  @keyframes scan-laser {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(124px); }
+  }
+
+  .animate-scan-laser {
+    animation: scan-laser 0.8s linear infinite;
+  }
+
+  @keyframes scan-laser-hero {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(100vh); }
+  }
+
+  .animate-scan-laser-hero {
+    animation: scan-laser-hero 6s linear infinite;
+  }
+
+  @keyframes particle-float-slow {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(40px, -60px); }
+  }
+
+  .animate-particle-float-slow {
+    animation: particle-float-slow 20s ease-in-out infinite;
+  }
+
+  @keyframes particle-float-slower {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(-50px, 40px); }
+  }
+
+  .animate-particle-float-slower {
+    animation: particle-float-slower 26s ease-in-out infinite;
+  }
+
   /* Responsive utilities */
   .responsive-padding {
     @apply p-4 md:p-6 lg:p-8;

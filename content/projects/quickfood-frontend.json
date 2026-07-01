@@ -1,0 +1,50 @@
+{
+  "hero": {
+    "backHref": "/work",
+    "domain": "Frontend Engineering / Commerce UX",
+    "title": "Quickfood Frontend",
+    "subtitle": "A high-velocity food ordering frontend focused on low-friction checkout and resilient UI state transitions."
+  },
+  "origin": {
+    "pullQuote": "In food ordering, every unnecessary click becomes a conversion risk.",
+    "paragraphs": [
+      "Quickfood Frontend was built to streamline digital ordering experiences where users expect immediate feedback, accurate cart logic, and minimal navigation overhead.",
+      "The product emphasizes conversion-critical flows: browse, customize, cart, and checkout. The engineering direction prioritized responsive rendering, predictable state updates, and graceful handling of transient network failures."
+    ]
+  },
+  "architecture": {
+    "title": "Componentized Ordering Workflow",
+    "description": "A JavaScript/TypeScript UI architecture with modular cart state, product views, and checkout orchestration.",
+    "codeBlocks": [
+      {
+        "filename": "cart.ts",
+        "language": "typescript",
+        "code": "type CartItem = { id: string; qty: number; price: number }\n\nexport function cartTotal(items: CartItem[]) {\n  return items.reduce((sum, i) => sum + i.qty * i.price, 0)\n}\n\nexport function upsertItem(items: CartItem[], incoming: CartItem) {\n  const idx = items.findIndex(i => i.id === incoming.id)\n  if (idx === -1) return [...items, incoming]\n  const next = [...items]\n  next[idx] = { ...next[idx], qty: next[idx].qty + incoming.qty }\n  return next\n}"
+      }
+    ],
+    "narrative": "The frontend separates browsing and transactional state to avoid cross-flow coupling. Product rendering, cart mutation, and checkout validation are handled in distinct layers so interaction bugs in one stage do not cascade into the payment path. Optimistic UI updates improve responsiveness, while reconciliation logic ensures final cart state aligns with server acknowledgments."
+  },
+  "hardParts": {
+    "title": "Maintaining Cart Integrity Under Rapid User Actions",
+    "description": "The toughest problem was preventing quantity drift and stale totals during quick repeated interactions.",
+    "codeBlocks": [
+      {
+        "filename": "mutation-queue.ts",
+        "language": "typescript",
+        "code": "let queue = Promise.resolve()\n\nexport function enqueueCartMutation<T>(task: () => Promise<T>): Promise<T> {\n  queue = queue.then(task as any).catch(() => undefined as any)\n  return queue as Promise<T>\n}"
+      }
+    ],
+    "narrative": "Users frequently issue burst actions (tap-add, remove, add again) before previous network responses return. Without serialization and idempotent updates, cart totals diverge from expected state. The solution introduced mutation queueing plus deterministic merge logic, stabilizing cart behavior under high interaction velocity.",
+    "reverseLayout": true
+  },
+  "metrics": {
+    "metrics": [
+      { "label": "Checkout Completion", "value": "94.8%" },
+      { "label": "Cart State Errors", "value": "None" },
+      { "label": "Interaction Latency", "value": "<8ms" }
+    ],
+    "nextProjectTitle": "THE-HOUSEHUB Platform",
+    "nextProjectHref": "/work/the-househub",
+    "nextProjectSubtitle": "PropTech listing discovery registry"
+  }
+}

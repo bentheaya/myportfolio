@@ -1,17 +1,17 @@
 'use client'
 
-import Link from 'next/link'
+import React, { useState } from 'react'
 import { Menu, X } from 'lucide-react'
-import { useState } from 'react'
+import { TransitionLink } from '@/components/transitions/TransitionLink'
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const navItems = [
     { label: 'Home', href: '/' },
-    { label: 'About', href: '#about' },
-    { label: 'Portfolio', href: '#portfolio' },
-    { label: 'Contact', href: '#contact' },
+    { label: 'Work', href: '/work' },
+    { label: 'About', href: '/about' },
+    { label: 'Contact', href: '/contact' },
   ]
 
   return (
@@ -21,30 +21,33 @@ export function Header() {
         <div className="glass h-full">
           <nav className="max-w-7xl mx-auto h-full px-6 flex items-center justify-between">
             {/* Logo */}
-            <Link
+            <TransitionLink
               href="/"
-              className="text-xl font-heading font-bold accent-text hover:opacity-80 transition-opacity"
+              className="text-lg font-mono font-bold text-accent-bright hover:opacity-80 transition-opacity"
             >
-              v0
-            </Link>
+              // benaih
+            </TransitionLink>
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center gap-8">
               {navItems.map((item) => (
-                <Link
+                <TransitionLink
                   key={item.href}
                   href={item.href}
                   className="text-sm font-medium text-canvas-text-secondary hover:text-canvas-text transition-colors duration-200"
                 >
                   {item.label}
-                </Link>
+                </TransitionLink>
               ))}
             </div>
 
             {/* CTA Button */}
-            <button className="px-4 py-2 rounded-lg bg-accent-bright text-canvas-bg font-medium text-sm hover:opacity-90 transition-opacity duration-200">
-              Get Started
-            </button>
+            <TransitionLink
+              href="/contact"
+              className="px-4 py-2 rounded-lg bg-accent-bright text-canvas-bg font-mono font-medium text-xs tracking-wider uppercase hover:opacity-90 transition-opacity duration-200"
+            >
+              Contact
+            </TransitionLink>
           </nav>
         </div>
       </header>
@@ -54,12 +57,12 @@ export function Header() {
         <div className="glass h-full">
           <nav className="h-full px-4 flex items-center justify-between">
             {/* Logo */}
-            <Link
+            <TransitionLink
               href="/"
-              className="text-lg font-heading font-bold accent-text hover:opacity-80 transition-opacity"
+              className="text-md font-mono font-bold text-accent-bright hover:opacity-80 transition-opacity"
             >
-              v0
-            </Link>
+              // benaih
+            </TransitionLink>
 
             {/* Mobile Menu Button */}
             <button
@@ -81,18 +84,22 @@ export function Header() {
           <div className="absolute top-14 left-0 right-0 bg-canvas-elevated border-b border-canvas-border/20 animate-slideInDown">
             <nav className="flex flex-col p-4 gap-3">
               {navItems.map((item) => (
-                <Link
+                <TransitionLink
                   key={item.href}
                   href={item.href}
                   className="px-3 py-2 rounded-lg text-sm font-medium text-canvas-text-secondary hover:text-canvas-text hover:bg-canvas-card/50 transition-all duration-200"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {item.label}
-                </Link>
+                </TransitionLink>
               ))}
-              <button className="mt-2 w-full px-3 py-2 rounded-lg bg-accent-bright text-canvas-bg font-medium text-sm hover:opacity-90 transition-opacity duration-200">
-                Get Started
-              </button>
+              <TransitionLink
+                href="/contact"
+                className="mt-2 w-full px-3 py-2 text-center rounded-lg bg-accent-bright text-canvas-bg font-mono font-medium text-xs uppercase tracking-wide hover:opacity-90 transition-opacity duration-200"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Contact
+              </TransitionLink>
             </nav>
           </div>
         )}

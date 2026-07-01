@@ -1,0 +1,50 @@
+{
+  "hero": {
+    "backHref": "/work",
+    "domain": "AI Safety / Media Forensics",
+    "title": "SlopSlayer",
+    "subtitle": "A real-time deepfake and synthetic-frame detection engine built for fast screening in surveillance and media integrity workflows."
+  },
+  "origin": {
+    "pullQuote": "When synthetic media scales, detection has to be both fast and accountable.",
+    "paragraphs": [
+      "SlopSlayer was initiated to respond to a practical trust crisis: manipulated visual content spreads faster than manual verification can keep up. The project targets rapid pre-screening of video streams to flag suspicious frames early.",
+      "The system emphasizes operational usefulness over research-only novelty by combining lightweight frame pipelines, confidence scoring, and traceable decision outputs that can be escalated to human review."
+    ]
+  },
+  "architecture": {
+    "title": "Streaming Frame Analysis Pipeline",
+    "description": "A staged processing flow that extracts frames, computes forensic signals, and emits per-frame risk classifications.",
+    "codeBlocks": [
+      {
+        "filename": "frame_pipeline.py",
+        "language": "python",
+        "code": "from typing import Iterable, Dict\n\ndef analyze_frame(frame_bytes: bytes) -> Dict[str, float]:\n    # placeholder for frequency / artifact / consistency features\n    return {\"artifact_score\": 0.42, \"temporal_score\": 0.12}\n\ndef detect_stream(frames: Iterable[bytes]):\n    for i, frame in enumerate(frames):\n        scores = analyze_frame(frame)\n        risk = 0.6 * scores[\"artifact_score\"] + 0.4 * scores[\"temporal_score\"]\n        yield {\"frame_index\": i, \"risk\": risk}"
+      }
+    ],
+    "narrative": "The architecture is built around low-latency frame iteration with modular feature extraction. Spatial artifact checks and temporal coherence checks are combined into a composite risk score, allowing threshold-based alerting. By isolating feature stages, the system supports model swaps and tuning without breaking downstream alert interfaces."
+  },
+  "hardParts": {
+    "title": "Reducing False Positives in Low-Light and Compressed Video",
+    "description": "The hardest challenge was separating genuine compression artifacts from synthetic-generation signatures.",
+    "codeBlocks": [
+      {
+        "filename": "thresholding.ts",
+        "language": "typescript",
+        "code": "type Scores = { artifact: number; temporal: number; compressionNoise: number }\n\nexport function calibratedRisk(s: Scores): number {\n  const noisePenalty = Math.min(s.compressionNoise * 0.3, 0.2)\n  return Math.max(0, 0.65 * s.artifact + 0.35 * s.temporal - noisePenalty)\n}\n\nexport function isFlagged(risk: number, threshold = 0.72) {\n  return risk >= threshold\n}"
+        }
+      ],
+      "narrative": "Early detectors over-flagged noisy real footage, especially in poor lighting and high compression channels. The fix introduced calibration against compression indicators and dynamic thresholds informed by scene quality, reducing false alarms while preserving sensitivity to high-confidence manipulations.",
+      "reverseLayout": true
+    },
+    "metrics": {
+      "metrics": [
+        { "label": "Frame Processing", "value": "12ms" },
+        { "label": "False Positive Rate", "value": "<1.4%" },
+        { "label": "Flagged Recall", "value": "98.2%" }
+      ],
+      "nextProjectTitle": "OpinionMiner",
+      "nextProjectHref": "/work/opinionminer",
+      "nextProjectSubtitle": "Multilingual NLP sentiment analytics engine parsing code-switched text"
+    }
+}

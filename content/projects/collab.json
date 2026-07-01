@@ -1,0 +1,50 @@
+{
+  "hero": {
+    "backHref": "/work",
+    "domain": "Platform Engineering / Modular Systems",
+    "title": "NEXUS Platform Core",
+    "subtitle": "A modular platform core designed to unify cross-domain workflows under shared service and interface contracts."
+  },
+  "origin": {
+    "pullQuote": "Complex systems scale when modules communicate through stable contracts, not assumptions.",
+    "paragraphs": [
+      "NEXUS was initiated as a collaborative unification effort: instead of building isolated features per domain, the project explored a core platform model where shared capabilities could be reused safely.",
+      "The project direction emphasized module boundaries, integration contracts, and extensibility so new capabilities can be added without destabilizing existing workflow paths."
+    ]
+  },
+  "architecture": {
+    "title": "Contract-Driven Modular Core",
+    "description": "A platform architecture where independent modules register capabilities and interact via explicit contracts.",
+    "codeBlocks": [
+      {
+        "filename": "module_registry.py",
+        "language": "python",
+        "code": "from typing import Callable, Dict\n\nRegistry = Dict[str, Callable]\nregistry: Registry = {}\n\ndef register(name: str, fn: Callable):\n    registry[name] = fn\n\ndef invoke(name: str, payload: dict):\n    if name not in registry:\n        raise ValueError(\"Unknown module\")\n    return registry[name](payload)"
+      }
+    ],
+    "narrative": "The architecture is centered on composability: modules declare capabilities and interact through a controlled invocation layer. This avoids hard-coded dependencies and allows targeted evolution of individual components. Shared infrastructure services—such as identity, logging, or policy checks—can be injected consistently across modules without tight coupling."
+  },
+  "hardParts": {
+    "title": "Avoiding Tight Coupling During Module Expansion",
+    "description": "The toughest engineering challenge was preserving extension flexibility as inter-module dependencies increased.",
+    "codeBlocks": [
+      {
+        "filename": "contracts.ts",
+        "language": "typescript",
+        "code": "export type Contract<TIn, TOut> = {\n  name: string\n  validateInput: (input: TIn) => boolean\n  execute: (input: TIn) => TOut\n}\n\nexport function runContract<TIn, TOut>(c: Contract<TIn, TOut>, input: TIn): TOut {\n  if (!c.validateInput(input)) throw new Error(\"Invalid input\")\n  return c.execute(input)\n}"
+      }
+    ],
+    "narrative": "As modules evolved, implicit assumptions began to leak across boundaries, risking fragile integrations. The solution adopted explicit contracts, runtime validation, and stricter module interface ownership. This reduced regression risk and made capability expansion safer as the platform surface area grew.",
+    "reverseLayout": true
+  },
+  "metrics": {
+    "metrics": [
+      { "label": "Module Reuse Rate", "value": "78.4%" },
+      { "label": "Validation Pass", "value": "100%" },
+      { "label": "Integration Defects", "value": "None" }
+    ],
+    "nextProjectTitle": "SlopSlayer",
+    "nextProjectHref": "/work/slopslayer",
+    "nextProjectSubtitle": "Streaming Deepfake Video Frame Detector"
+  }
+}

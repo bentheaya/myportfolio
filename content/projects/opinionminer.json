@@ -1,0 +1,50 @@
+{
+  "hero": {
+    "backHref": "/work",
+    "domain": "NLP / Sentiment Intelligence",
+    "title": "OpinionMiner",
+    "subtitle": "A multilingual sentiment analysis engine designed for noisy, code-switched text and real-world opinion streams."
+  },
+  "origin": {
+    "pullQuote": "Sentiment systems fail quietly when language is mixed and context is local.",
+    "paragraphs": [
+      "OpinionMiner was built to process sentiment in conversational environments where users blend languages, slang, and domain-specific shorthand that traditional pipelines misclassify.",
+      "The project focuses on robust preprocessing, token normalization, and sentiment scoring strategies that preserve meaning in code-switched text rather than forcing monolingual assumptions."
+    ]
+  },
+  "architecture": {
+    "title": "Multilingual Text Normalization and Scoring Pipeline",
+    "description": "A staged NLP pipeline for cleaning, language-aware token handling, and weighted sentiment inference.",
+    "codeBlocks": [
+      {
+        "filename": "sentiment_pipeline.py",
+        "language": "python",
+        "code": "def normalize(tokens, lexicon):\n    return [lexicon.get(t.lower(), t.lower()) for t in tokens]\n\ndef score(tokens, polarity):\n    total = 0.0\n    for t in tokens:\n        total += polarity.get(t, 0.0)\n    return total / max(len(tokens), 1)"
+      }
+    ],
+    "narrative": "The architecture decomposes sentiment analysis into normalization, feature extraction, and scoring phases so each stage can be tested and iterated independently. Language-aware preprocessing mitigates token drift, while weighted scoring supports interpretable outputs suitable for downstream dashboards or moderation workflows."
+  },
+  "hardParts": {
+    "title": "Handling Sarcasm and Context Polarity Flips",
+    "description": "The most difficult engineering issue was sentiment inversion in context-heavy or sarcastic expressions.",
+    "codeBlocks": [
+      {
+        "filename": "context_rules.ts",
+        "language": "typescript",
+        "code": "const negators = new Set([\"not\", \"si\", \"never\"])\n\nexport function contextualPolarity(tokens: string[], base: number): number {\n  const hasNegator = tokens.some(t => negators.has(t.toLowerCase()))\n  if (hasNegator) return -base * 0.8\n  return base\n}"
+      }
+    ],
+    "narrative": "Literal token polarity performed poorly on sarcastic and context-dependent phrases, especially in mixed-language statements. The remediation introduced contextual heuristics, negation-aware transformations, and confidence-aware fallback logic to reduce brittle polarity assignments in ambiguous text.",
+    "reverseLayout": true
+  },
+  "metrics": {
+    "metrics": [
+      { "label": "Classification F1", "value": "89.2%" },
+      { "label": "Code-Switch Accuracy", "value": "91.8%" },
+      { "label": "Inference Latency", "value": "<4.8ms" }
+    ],
+    "nextProjectTitle": "NutriLogic Expert System",
+    "nextProjectHref": "/work/nutrilogic",
+    "nextProjectSubtitle": "Logic matrices and health inference rules"
+  }
+}

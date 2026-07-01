@@ -1,0 +1,50 @@
+{
+  "hero": {
+    "backHref": "/work",
+    "domain": "Applied AI / Recommender Systems",
+    "title": "AI Course Recommender",
+    "subtitle": "A recommendation engine that maps student preferences and performance signals to actionable course pathways."
+  },
+  "origin": {
+    "pullQuote": "Good recommendations reduce uncertainty, not just increase options.",
+    "paragraphs": [
+      "This project was initiated to address a common student planning problem: course selection is often high-stakes and data-poor at the decision moment. Students need interpretable guidance, not opaque ranking outputs.",
+      "The recommender was designed to combine interest profiles, historical academic behavior, and configurable weighting logic into a recommendation flow that remains transparent and easy to explain."
+    ]
+  },
+  "architecture": {
+    "title": "Feature-Weighted Recommendation Pipeline",
+    "description": "A Python-based scoring pipeline with profile construction, feature weighting, and recommendation ranking.",
+    "codeBlocks": [
+      {
+        "filename": "recommender.py",
+        "language": "python",
+        "code": "from typing import Dict, List\n\ndef score_course(profile: Dict[str, float], course: Dict[str, float], w_interest=0.6, w_performance=0.4):\n    interest = profile.get(\"interest\", 0) * course.get(\"interest_fit\", 0)\n    performance = profile.get(\"performance\", 0) * course.get(\"difficulty_fit\", 0)\n    return (interest * w_interest) + (performance * w_performance)\n\ndef rank_courses(profile: Dict[str, float], catalog: List[Dict[str, float]]):\n    return sorted(catalog, key=lambda c: score_course(profile, c), reverse=True)"
+      }
+    ],
+    "narrative": "The architecture uses explicit feature scoring rather than black-box output-only ranking. Student signals are transformed into interpretable vectors, then matched to course metadata under configurable weights. This layered design allows controlled experimentation, easier debugging of recommendation quality, and transparent user communication of why a course appeared in results."
+  },
+  "hardParts": {
+    "title": "Controlling Bias in Sparse Student Profiles",
+    "description": "The core challenge was avoiding overconfident rankings when profile inputs were incomplete.",
+    "codeBlocks": [
+      {
+        "filename": "confidence.py",
+        "language": "python",
+        "code": "def confidence_from_profile(profile: dict) -> float:\n    observed = sum(1 for v in profile.values() if v is not None)\n    total = max(len(profile), 1)\n    return observed / total\n\ndef adjusted_score(raw_score: float, confidence: float) -> float:\n    return raw_score * (0.5 + 0.5 * confidence)"
+      }
+    ],
+    "narrative": "Early ranking behavior overweighted narrow inputs and produced brittle recommendations for new or partial user profiles. The fix introduced confidence-aware scoring and conservative fallback heuristics, ensuring that low-signal profiles produce appropriately tempered recommendations rather than misleading precision.",
+    "reverseLayout": true
+  },
+  "metrics": {
+    "metrics": [
+      { "label": "Acceptance Rate", "value": "84.5%" },
+      { "label": "Calibration Error", "value": "<0.05" },
+      { "label": "Explainability", "value": "100%" }
+    ],
+    "nextProjectTitle": "Dira AR Pathfinder",
+    "nextProjectHref": "/work/dira",
+    "nextProjectSubtitle": "Offline AR navigation guides and vision routing"
+  }
+}

@@ -10,6 +10,7 @@ export interface ProjectPageData {
     domain: string
     title: string
     subtitle?: string
+    accentHue?: number
   }
   origin: {
     pullQuote: string
@@ -50,9 +51,10 @@ export interface ProjectPageData {
 interface ProjectPageProps {
   data: ProjectPageData
   children?: React.ReactNode
+  slug?: string
 }
 
-export function ProjectPage({ data, children }: ProjectPageProps) {
+export function ProjectPage({ data, children, slug }: ProjectPageProps) {
   return (
     <article className="w-full bg-canvas-bg">
       {/* Hero Section */}
@@ -61,6 +63,8 @@ export function ProjectPage({ data, children }: ProjectPageProps) {
         domain={data.hero.domain}
         title={data.hero.title}
         subtitle={data.hero.subtitle}
+        accentHue={data.hero.accentHue}
+        slug={slug}
       />
 
       {/* Origin Section */}
@@ -71,9 +75,11 @@ export function ProjectPage({ data, children }: ProjectPageProps) {
 
       {/* Interaction Shell - with canvas ready for custom elements */}
       <InteractionShell
-        title="Live Interaction"
-        description="Below is a responsive canvas container ready for your custom web components and interactive elements."
-      />
+        title="Live Simulation"
+        description="Interact with the active sandbox model below to test the logic interfaces."
+      >
+        {children}
+      </InteractionShell>
 
       {/* Architecture Section */}
       <CodeSection
@@ -91,9 +97,6 @@ export function ProjectPage({ data, children }: ProjectPageProps) {
         narrative={data.hardParts.narrative}
         reverseLayout={data.hardParts.reverseLayout}
       />
-
-      {/* Custom children if provided */}
-      {children}
 
       {/* Metrics & Next Project Section */}
       <MetricsSection

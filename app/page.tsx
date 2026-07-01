@@ -1,75 +1,73 @@
-'use client';
-
 import { Shell } from '@/components/layout/shell';
 import { HomeHero } from '@/components/sections/home-hero';
 import { AboutSection } from '@/components/sections/about-section';
 import { FeaturedProjectsSection, type FeaturedProject } from '@/components/sections/featured-projects-section';
+import { ConstellationSection } from '@/components/sections/constellation-section';
 import { ContactSection } from '@/components/sections/contact-section';
 import { HueControl } from '@/components/ui/hue-control';
 
 export default function Home() {
-  // Featured projects data
+  // Curated Featured projects data
   const featuredProjects: FeaturedProject[] = [
     {
-      id: 'detection',
-      title: 'AI Detection System',
-      description: 'Real-time content detection with sub-100ms latency',
+      id: 'slopslayer',
+      title: 'SlopSlayer',
+      description: 'Real-time deepfake and AI-generated content detection engine.',
       domain: 'AI / Detection',
-      href: '/showcase',
+      href: '/work/slopslayer',
       accentHue: 0,
     },
     {
-      id: 'spatial',
-      title: 'Spatial UI Framework',
-      description: 'AR experiences with perspective transforms',
-      domain: 'AR / Spatial',
-      href: '/projects/spatial-ui',
-      accentHue: 180,
+      id: 'dira',
+      title: 'Dira AR Pathfinder',
+      description: 'Gemini agentic vision spatial guide and offline navigation layers.',
+      domain: 'AR / Spatial AI',
+      href: '/work/dira',
+      accentHue: 224,
     },
     {
-      id: 'analytics',
-      title: 'Data Analytics Platform',
-      description: 'Interactive visualizations and dashboards',
-      domain: 'Data / Visualization',
-      href: '/projects/analytics',
+      id: 'intuilab',
+      title: 'IntuiLab',
+      description: 'Next-generation pedagogical learning environment for active discovery.',
+      domain: 'EdTech / Learning',
+      href: '/work/intuilab',
       accentHue: 45,
     },
     {
-      id: 'learning',
-      title: 'Learning Experience System',
-      description: 'Personalized education with interactive elements',
-      domain: 'EdTech / Learning',
-      href: '/projects/learning',
-      accentHue: 270,
+      id: 'ukweli',
+      title: 'UKWELI Civic Platform',
+      description: 'Community-driven digital literacy and content authenticity verification.',
+      domain: 'Civic Tech / Digital Literacy',
+      href: '/work/ukweli',
+      accentHue: 164,
     },
   ];
 
   // Contact links
   const contactLinks = [
-    { label: 'GitHub', href: 'https://github.com', icon: '→' },
-    { label: 'Twitter', href: 'https://twitter.com', icon: '→' },
-    { label: 'LinkedIn', href: 'https://linkedin.com', icon: '→' },
-    { label: 'Email', href: 'mailto:hello@example.com', icon: '→' },
+    { label: 'GitHub', href: 'https://github.com/bentheaya', icon: '→' },
+    { label: 'LinkedIn', href: 'https://linkedin.com/in/bentheaya', icon: '→' },
+    { label: 'Email', href: 'mailto:bentheaya@gmail.com', icon: '→' },
   ];
 
   return (
     <Shell>
       {/* Hero Section */}
       <HomeHero
-        name="Creative Technologist"
-        tagline="Building elegant interfaces and interactive experiences"
-        location="San Francisco, CA"
-        status="Available for Projects"
+        name="Benaih Shaback."
+        tagline="Building at the intersection of mathematics, systems, and learning"
+        location="Nairobi, Kenya"
+        status="Open to Work"
       />
 
       {/* About Section */}
       <AboutSection
         title="About Me"
         paragraphs={[
-          "I&apos;m a full-stack engineer passionate about crafting beautiful, performant digital experiences. With expertise in React, Three.js, and modern tooling, I specialize in building interactive systems that bridge design and technology.",
-          "My work focuses on creating scalable architectures, optimizing performance, and pushing the boundaries of what&apos;s possible on the web. When I&apos;m not coding, I explore new techniques in 3D rendering and generative design.",
+          "I'm a software developer and mathematics student passionate about crafting performant digital systems and tactile visual experiences. Completing my B.Sc. in Mathematics & Computer Science at Maseno University, I specialize in building robust backend pipelines, logic programming integrations, and interactive mathematical manifolds.",
+          "My engineering focus spans low-latency frame extraction engines, spatial databases, and microservices architecture. I believe the best digital environments make complex, abstract ideas feel intuitive and accessible through active exploration."
         ]}
-        highlights={['React', 'Next.js', 'Three.js', 'TypeScript', 'WebGL', 'Performance']}
+        highlights={['Mathematics', 'Computer Science', 'TypeScript', 'Python', 'Prolog', 'Next.js', 'Three.js', 'PostgreSQL', 'Redis']}
       />
 
       {/* Featured Projects */}
@@ -80,16 +78,19 @@ export default function Home() {
         viewAllHref="/work"
       />
 
+      {/* Constellation Section */}
+      <ConstellationSection />
+
       {/* Contact Section */}
       <ContactSection
         title="Get In Touch"
-        subtitle="Interested in working together? Have a question about my work?"
-        email="hello@example.com"
+        subtitle="Interested in working together? Have a question about my work or research?"
+        email="bentheaya@gmail.com"
         links={contactLinks}
       />
 
       {/* Hue Control for accent color adjustment */}
-      <HueControl initialHue={164} />
+      <HueControl />
     </Shell>
   )
 }

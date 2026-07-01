@@ -1,0 +1,50 @@
+{
+  "hero": {
+    "backHref": "/work",
+    "domain": "EdTech / Interactive Learning Systems",
+    "title": "IntuiLab",
+    "subtitle": "A discovery-first learning workspace that combines interactive simulations with Socratic AI guidance."
+  },
+  "origin": {
+    "pullQuote": "Learning deepens when students manipulate ideas, not just read them.",
+    "paragraphs": [
+      "IntuiLab was started to address passive-learning fatigue by giving learners a workspace where concepts are explored through guided experimentation and structured questioning.",
+      "The platform is designed around active discovery: visual interactions, response feedback loops, and pedagogical pacing that nudges learners from intuition to formal understanding."
+    ]
+  },
+  "architecture": {
+    "title": "Interactive Pedagogy Engine",
+    "description": "A frontend-heavy system pairing simulation components with question-state orchestration and feedback loops.",
+    "codeBlocks": [
+      {
+        "filename": "learning_loop.ts",
+        "language": "typescript",
+        "code": "type Step = { id: string; prompt: string; expectedConcept: string }\n\ntype LearnerState = { stepIndex: number; mastery: Record<string, number> }\n\nexport function advance(state: LearnerState, concept: string): LearnerState {\n  const current = state.mastery[concept] ?? 0\n  return {\n    ...state,\n    stepIndex: state.stepIndex + 1,\n    mastery: { ...state.mastery, [concept]: Math.min(1, current + 0.1) }\n  }\n}"
+      }
+    ],
+    "narrative": "The architecture organizes learning into guided micro-steps where each interaction updates learner state and influences what comes next. Simulation modules run independently from the pedagogy engine, allowing reusable visual components while preserving coherent instructional flow. This separation keeps content authoring flexible and behavior tracking structured."
+  },
+  "hardParts": {
+    "title": "Balancing Open Exploration with Guided Progression",
+    "description": "The most difficult issue was preventing users from getting lost in exploration while preserving curiosity-driven interaction.",
+    "codeBlocks": [
+      {
+        "filename": "hint_scheduler.ts",
+        "language": "typescript",
+        "code": "export function hintLevel(attempts: number, stalledSeconds: number): number {\n  if (attempts > 4 || stalledSeconds > 90) return 3\n  if (attempts > 2 || stalledSeconds > 45) return 2\n  if (attempts > 1 || stalledSeconds > 20) return 1\n  return 0\n}"
+      }
+    ],
+    "narrative": "Highly open interfaces initially caused uneven learning outcomes: some users progressed quickly, others stalled without clear intervention points. The solution introduced adaptive hint scheduling and progress-aware prompt sequencing so learners retain agency while still receiving timely scaffolding.",
+    "reverseLayout": true
+  },
+  "metrics": {
+    "metrics": [
+      { "label": "Session Completion", "value": "89.4%" },
+      { "label": "Concept Mastery", "value": "+44%" },
+      { "label": "Avg Hint Escalation", "value": "1.2/user" }
+    ],
+    "nextProjectTitle": "UKWELI Civic Platform",
+    "nextProjectHref": "/work/ukweli",
+    "nextProjectSubtitle": "Community-driven digital literacy and Swahili misinformation tracker"
+  }
+}

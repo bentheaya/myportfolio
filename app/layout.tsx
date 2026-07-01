@@ -1,6 +1,7 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { Space_Grotesk, JetBrains_Mono } from 'next/font/google'
+import { HueProvider } from '@/components/hue/HueProvider'
 import './globals.css'
 
 const spaceGrotesk = Space_Grotesk({
@@ -16,9 +17,8 @@ const jetbrainsMono = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
-  generator: 'v0.app',
+  title: 'Benaih Shaback | Mathematics & Computer Science',
+  description: 'Personal portfolio of Benaih Shaback Galavu, B.Sc. Mathematics & Computer Science student at Maseno University. Building at the intersection of mathematics, systems, and learning.',
   icons: {
     icon: [
       {
@@ -58,7 +58,9 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="font-sans antialiased bg-canvas-bg text-canvas-text">
-        {children}
+        <HueProvider>
+          {children}
+        </HueProvider>
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>

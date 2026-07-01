@@ -1,5 +1,6 @@
 import React from 'react';
 import { ProjectCard } from '@/components/ui/project-card';
+import { TransitionLink } from '@/components/transitions/TransitionLink';
 
 export interface FeaturedProject {
   id: string;
@@ -22,21 +23,6 @@ interface FeaturedProjectsSectionProps {
 /**
  * FeaturedProjectsSection
  * Grid of prominent featured projects for home page.
- * 
- * Features:
- * - Responsive 2x2 or 1x4 grid layout
- * - ProjectCard component integration
- * - Optional "View All" link
- * - Accent color per project
- * - Clean hierarchy
- * 
- * Usage:
- * <FeaturedProjectsSection
- *   title="Featured Work"
- *   projects={[...]}
- *   showViewAll
- *   viewAllHref="/work"
- * />
  */
 export function FeaturedProjectsSection({
   title = 'Featured Work',
@@ -54,12 +40,12 @@ export function FeaturedProjectsSection({
             {title}
           </h2>
           {showViewAll && (
-            <a
+            <TransitionLink
               href={viewAllHref}
               className="text-sm font-mono text-accent-bright hover:text-accent-dim transition-colors duration-200 underline-accent"
             >
               View all projects →
-            </a>
+            </TransitionLink>
           )}
         </div>
 
