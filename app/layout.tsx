@@ -46,6 +46,8 @@ export const viewport: Viewport = {
   ],
 }
 
+import { Shell } from '@/components/layout/shell'
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -59,7 +61,9 @@ export default function RootLayout({
     >
       <body className="font-sans antialiased bg-canvas-bg text-canvas-text">
         <HueProvider>
-          {children}
+          <Shell>
+            {children}
+          </Shell>
         </HueProvider>
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>

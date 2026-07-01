@@ -1,4 +1,3 @@
-import { Shell } from '@/components/layout/shell';
 import { HomeHero } from '@/components/sections/home-hero';
 import { AboutSection } from '@/components/sections/about-section';
 import { FeaturedProjectsSection, type FeaturedProject } from '@/components/sections/featured-projects-section';
@@ -36,8 +35,8 @@ export default function Home() {
     {
       id: 'ukweli',
       title: 'UKWELI Civic Platform',
-      description: 'Community-driven digital literacy and content authenticity verification.',
-      domain: 'Civic Tech / Digital Literacy',
+      description: 'Misinformation detection and translation tracker for Swahili communities.',
+      domain: 'Civic Tech / Swahili AI',
       href: '/work/ukweli',
       accentHue: 164,
     },
@@ -51,7 +50,7 @@ export default function Home() {
   ];
 
   return (
-    <Shell>
+    <>
       {/* Hero Section */}
       <HomeHero
         name="Benaih Shaback."
@@ -91,6 +90,6 @@ export default function Home() {
 
       {/* Hue Control for accent color adjustment */}
       <HueControl />
-    </Shell>
+    </>
   )
 }
