@@ -76,7 +76,7 @@ function Node({ project, position, onNodeClick }: NodeProps) {
   useFrame(() => {
     if (!meshRef.current) return;
     const targetScale = hovered ? 1.8 : 1.0;
-MeshRef.current.scale.lerp(new THREE.Vector3(targetScale, targetScale, targetScale), 0.15);
+    meshRef.current.scale.lerp(new THREE.Vector3(targetScale, targetScale, targetScale), 0.15);
   });
 
   return (
