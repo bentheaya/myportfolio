@@ -21,7 +21,7 @@ interface ScrollRevealProps {
 export function ScrollReveal({
   children,
   animation = 'fade-up',
-  duration = 0.8,
+  duration = 1.0,
   delay = 0,
   startTrigger = 'top 85%',
   className = '',
@@ -59,31 +59,34 @@ export function ScrollReveal({
       case 'fade':
         break;
       case 'fade-up':
-        fromVars.y = 40;
+        fromVars.y = 30; // gentler offset than 40
         toVars.y = 0;
         break;
       case 'fade-down':
-        fromVars.y = -40;
+        fromVars.y = -30;
         toVars.y = 0;
         break;
       case 'scale':
-        fromVars.scale = 0.95;
+        fromVars.scale = 0.96;
         toVars.scale = 1;
         break;
       case 'slide-left':
-        fromVars.x = 50;
+        fromVars.x = 40;
         toVars.x = 0;
         break;
       case 'slide-right':
-        fromVars.x = -50;
+        fromVars.x = -40;
         toVars.x = 0;
         break;
     }
 
-    gsap.fromTo(el, fromVars, toVars);
+    const tween = gsap.fromTo(el, fromVars, toVars);
 
     return () => {
-      ScrollTrigger.getById(`reveal-${el.id}`)?.kill();
+      tween.kill();
+      if (tween.scrollTrigger) {
+        tween.scrollTrigger.kill();
+      }
     };
   }, [animation, duration, delay, startTrigger]);
 

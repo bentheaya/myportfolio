@@ -25,6 +25,7 @@ export function initLenis() {
     gestureOrientation: 'vertical',
     smoothWheel: !prefersReduced,
     syncTouch: false, // native scroll on touch devices
+    autoRaf: false, // crucial: disables Lenis's own internal animation loop so GSAP ticker controls it
   });
 
   // Connect Lenis to GSAP ScrollTrigger

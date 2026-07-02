@@ -23,8 +23,9 @@ export function MagneticWrapper({
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Proximity guard: skip on mobile or reduced-motion
-    if (window.matchMedia('(pointer: coarse)').matches) return;
+    // Proximity guard: skip on small screens or devices that do not support fine pointers
+    const isMobileOrTablet = window.innerWidth < 1024 || !window.matchMedia('(pointer: fine)').matches;
+    if (isMobileOrTablet) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     const container = containerRef.current;

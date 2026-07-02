@@ -5,10 +5,15 @@ import dynamic from 'next/dynamic';
 import { projectsMetadata, ProjectMetadata } from '@/lib/projects';
 import { TransitionLink } from '@/components/transitions/TransitionLink';
 
-// Lazy-load R3F scene
 const ConstellationScene = dynamic(() => import('@/components/three/ConstellationScene'), {
   ssr: false,
-  loading: () => <div className="absolute inset-0 z-0 bg-canvas-bg" />,
+  loading: () => (
+    <div className="absolute inset-0 z-0 bg-canvas-bg flex items-center justify-center pointer-events-none select-none">
+      <span className="text-[9px] font-mono text-canvas-text-tertiary uppercase tracking-widest animate-pulse">
+        // initializing.3d_work_constellation...
+      </span>
+    </div>
+  ),
 });
 
 export function ConstellationSection() {
@@ -17,7 +22,8 @@ export function ConstellationSection() {
 
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.matchMedia('(max-width: 768px)').matches || window.matchMedia('(pointer: coarse)').matches);
+      const isMobileOrTablet = window.innerWidth < 1024 || !window.matchMedia('(pointer: fine)').matches;
+      setIsMobile(isMobileOrTablet);
     };
     checkMobile();
     window.addEventListener('resize', checkMobile);

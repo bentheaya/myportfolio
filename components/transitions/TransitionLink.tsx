@@ -27,9 +27,10 @@ export function TransitionLink({ href, children, ...props }: TransitionLinkProps
 
     e.preventDefault();
     
-    // Capture cursor X coordinate for transition transform-origin alignment
+    // Capture cursor coordinates for transition origin alignment
     const cursorX = e.clientX || window.innerWidth / 2;
-    startTransition(href, cursorX);
+    const cursorY = e.clientY || window.innerHeight / 2;
+    startTransition(href, cursorX, cursorY);
   };
 
   return (

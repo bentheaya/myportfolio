@@ -9,31 +9,24 @@ import ScrollTrigger from 'gsap/ScrollTrigger';
 import { projectsMetadata, ProjectMetadata } from '@/lib/projects';
 import { usePageTransition } from '@/components/transitions/TransitionContext';
 
-// Define fixed 3D coordinates for all projects in a clean centered constellation
-const nodePositions: { [slug: string]: [number, number, number] } = {
-  slopslayer: [-2.5, 2, -1],
-  opinionminer: [-1.2, 1, -2],
-  nutrilogic: [0.5, 1.8, -1.5],
-  'ai-course-recommender': [2.2, 1.2, -1.2],
+// Dynamically compute the spherical coordinate positions of all projects
+const numProjects = projectsMetadata.length;
+export const sphericalPositions: { [slug: string]: [number, number, number] } = {};
+
+projectsMetadata.forEach((project, idx) => {
+  const radius = 2.4; // Slightly compact sphere for perfect framing
+  const offset = 2 / numProjects;
+  const increment = Math.PI * (3 - Math.sqrt(5)); // Golden angle
   
-  dira: [-1.8, -0.5, 0],
-  diffgeo: [0.2, 0.2, -1],
-  musicgame: [2, -0.2, -0.8],
+  const y = ((idx * offset) - 1) + (offset / 2);
+  const r = Math.sqrt(1 - y * y);
+  const phi = idx * increment;
   
-  spiks: [-2.2, -1.8, -1],
-  'legacy-core': [0.2, -2, -1.5],
-  miniecommerce: [2.2, -1.5, -0.8],
-  'quickfood-frontend': [3.5, -1.2, -1],
-  'the-househub': [1.5, -2.8, -1.2],
+  const x = Math.cos(phi) * r;
+  const z = Math.sin(phi) * r;
   
-  intuilab: [-3, -3.2, -2],
-  ukweli: [-1.2, -3.5, -1.5],
-  nyaraka: [0.8, -3.5, -2],
-  veld: [2.5, -3, -1.5],
-  'digital-economy': [4.2, -2.5, -2],
-  
-  collab: [1, -0.8, -3],
-};
+  sphericalPositions[project.slug] = [x * radius, y * radius, z * radius];
+});
 
 const connections = [
   ['slopslayer', 'opinionminer'],
@@ -132,7 +125,7 @@ function ConstellationNode({ project, position, activeFilter, onNodeClick }: Nod
       >
         <div className="flex flex-col items-center">
           <span 
-            className="text-[9px] font-mono whitespace-nowrap px-1.5 py-0.5 rounded bg-canvas-bg/85 border border-canvas-border text-canvas-text"
+            className="text-[9px] font-mono whitespace-nowrap px-1.5 py-0.5 rounded bg-canvas-bg/85 border border-canvas-border text-canvas-text shadow-md shadow-black/35"
             style={{ borderColor: hovered ? project.accentColor : 'var(--color-canvas-border)' }}
           >
             {project.title}
@@ -151,8 +144,8 @@ function ConstellationLines({ activeFilter }: { activeFilter: string }) {
 
     const points: THREE.Vector3[] = [];
     connections.forEach(([startSlug, endSlug]) => {
-      const start = nodePositions[startSlug];
-      const end = nodePositions[endSlug];
+      const start = sphericalPositions[startSlug];
+      const end = sphericalPositions[endSlug];
       if (start && end) {
         points.push(new THREE.Vector3(...start));
         points.push(new THREE.Vector3(...end));
@@ -169,9 +162,9 @@ function ConstellationLines({ activeFilter }: { activeFilter: string }) {
     <lineSegments>
       <bufferGeometry ref={lineGeometryRef} />
       <lineBasicMaterial
-        color="#262626"
+        color="#3a8c6e"
         transparent
-        opacity={isFiltering ? 0.15 : 0.4}
+        opacity={isFiltering ? 0.10 : 0.35}
         blending={THREE.AdditiveBlending}
       />
     </lineSegments>
@@ -179,23 +172,24 @@ function ConstellationLines({ activeFilter }: { activeFilter: string }) {
 }
 
 function SceneOrchestrator({ activeFilter }: { activeFilter: string }) {
-  const { camera } = useThree();
+  const { camera, clock } = useThree();
+  const groupRef = useRef<THREE.Group>(null);
   const { startTransition } = usePageTransition();
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
-    // Scroll-driven camera pullback Z=5 -> Z=12
+    // Scroll-driven camera pullback Z=5 -> Z=10
     const trigger = ScrollTrigger.create({
       trigger: '#constellation-section',
       start: 'top bottom',
       end: 'bottom top',
       scrub: true,
       onUpdate: (self) => {
-        // pull back camera dynamically from z=5 to z=12
-        camera.position.z = 5 + self.progress * 7;
-        camera.position.y = -self.progress * 2;
-        camera.lookAt(0, -1, -3);
+        // pull back camera dynamically from z=5 to z=9
+        camera.position.z = 5 + self.progress * 4;
+        camera.position.y = -self.progress * 1.5;
+        camera.lookAt(0, 0, 0);
       }
     });
 
@@ -204,16 +198,26 @@ function SceneOrchestrator({ activeFilter }: { activeFilter: string }) {
     };
   }, [camera]);
 
+  useFrame(() => {
+    if (!groupRef.current) return;
+    const time = clock.getElapsedTime();
+    // Rotate the entire spherical cluster slowly in 3D
+    groupRef.current.rotation.y = time * 0.05;
+    groupRef.current.rotation.x = Math.sin(time * 0.03) * 0.08;
+    // Add a tiny bit of continuous vertical drift
+    groupRef.current.position.y = Math.sin(time * 0.2) * 0.1;
+  });
+
   const handleNodeClick = (slug: string) => {
-    startTransition(`/work/${slug}`, window.innerWidth / 2);
+    startTransition(`/work/${slug}`, window.innerWidth / 2, window.innerHeight / 2);
   };
 
   return (
-    <>
+    <group ref={groupRef}>
       <ambientLight intensity={0.4} />
       <ConstellationLines activeFilter={activeFilter} />
       {projectsMetadata.map((project) => {
-        const position = nodePositions[project.slug];
+        const position = sphericalPositions[project.slug];
         if (!position) return null;
         return (
           <ConstellationNode
@@ -225,7 +229,7 @@ function SceneOrchestrator({ activeFilter }: { activeFilter: string }) {
           />
         );
       })}
-    </>
+    </group>
   );
 }
 

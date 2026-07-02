@@ -42,7 +42,7 @@ const FLOOD_TOP = 'circle(160% at 50% -8%)';
 const HIDDEN_TOP = 'circle(0% at 50% -8%)';
 
 export function PageTransition() {
-  const { transitionProgress } = usePageTransition();
+  const { transitionProgress, cursorX, cursorY } = usePageTransition();
   const glassRef   = useRef<HTMLDivElement>(null);
   const shimmerRef = useRef<HTMLDivElement>(null);
   const filterRef  = useRef<SVGFETurbulenceElement>(null);
@@ -57,6 +57,13 @@ export function PageTransition() {
 
     const prefersReduced =
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Calculate cursor percentage coordinates relative to viewport
+    const pctX = (cursorX / (typeof window !== 'undefined' ? window.innerWidth : 1)) * 100;
+    const pctY = (cursorY / (typeof window !== 'undefined' ? window.innerHeight : 1)) * 100;
+
+    const cursorHidden = `circle(0% at ${pctX}% ${pctY}%)`;
+    const cursorFlooded = `circle(150% at ${pctX}% ${pctY}%)`;
 
     // ── Reduced-motion fallback: simple opacity fade ────────────────────
     if (prefersReduced) {
@@ -75,10 +82,10 @@ export function PageTransition() {
       return;
     }
 
-    // ── Enter: circle expands from bottom-center ────────────────────────
+    // ── Enter: circle expands from cursor coordinates ──────────────────
     if (transitionProgress === 'animating-in') {
       gsap.set([glass, svg], { display: 'block' });
-      gsap.set(glass, { clipPath: HIDDEN_BOTTOM, opacity: 1 });
+      gsap.set(glass, { clipPath: cursorHidden, opacity: 1 });
       gsap.set(shimmer, { x: '-110%', opacity: 0 });
 
       // Animate turbulence during the wipe (water movement)
@@ -92,7 +99,7 @@ export function PageTransition() {
       tl
         // Expand circle — ease gives it a weighty, fluid feel
         .to(glass, {
-          clipPath: FLOODED,
+          clipPath: cursorFlooded,
           duration: 0.65,
           ease: 'power2.inOut',
         })
@@ -104,10 +111,9 @@ export function PageTransition() {
           ease: 'power1.inOut',
         }, '-=0.25');
 
-    // ── Exit: circle collapses from top-center ──────────────────────────
+    // ── Exit: circle collapses back to cursor coordinates ──────────────
     } else if (transitionProgress === 'animating-out') {
-      // Snap origin to top so the circle appears to pull back upward
-      gsap.set(glass, { clipPath: FLOOD_TOP });
+      gsap.set(glass, { clipPath: cursorFlooded });
 
       gsap.to(turbulence, {
         attr: { seed: 5, baseFrequency: '0.02 0.06' },
@@ -118,13 +124,13 @@ export function PageTransition() {
       const tl = gsap.timeline({
         onComplete: () => {
           gsap.set([glass, svg], { display: 'none' });
-          gsap.set(glass, { clipPath: HIDDEN_BOTTOM, opacity: 1 });
+          gsap.set(glass, { clipPath: cursorHidden, opacity: 1 });
           gsap.set(shimmer, { x: '-110%', opacity: 0 });
           gsap.set(turbulence, { attr: { baseFrequency: '0.014 0.04', seed: 8 } });
         },
       });
       tl.to(glass, {
-        clipPath: HIDDEN_TOP,
+        clipPath: cursorHidden,
         duration: 0.56,
         ease: 'power2.inOut',
       });
@@ -132,11 +138,11 @@ export function PageTransition() {
     // ── Idle ────────────────────────────────────────────────────────────
     } else {
       gsap.set([glass, svg], { display: 'none' });
-      gsap.set(glass, { clipPath: HIDDEN_BOTTOM, opacity: 1 });
+      gsap.set(glass, { clipPath: cursorHidden, opacity: 1 });
       gsap.set(shimmer, { x: '-110%', opacity: 0 });
       gsap.set(turbulence, { attr: { baseFrequency: '0.014 0.04', seed: 8 } });
     }
-  }, [transitionProgress]);
+  }, [transitionProgress, cursorX, cursorY]);
 
   return (
     <>

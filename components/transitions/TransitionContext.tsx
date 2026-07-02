@@ -6,10 +6,11 @@ import { getLenis } from '@/lib/lenis';
 
 interface TransitionContextType {
   isPending: boolean;
-  startTransition: (href: string, cursorX: number) => void;
+  startTransition: (href: string, cursorX: number, cursorY: number) => void;
   transitionProgress: 'idle' | 'animating-in' | 'animating-out';
   setTransitionProgress: (progress: 'idle' | 'animating-in' | 'animating-out') => void;
   cursorX: number;
+  cursorY: number;
 }
 
 const TransitionContext = createContext<TransitionContextType | undefined>(undefined);
@@ -19,8 +20,9 @@ export function TransitionProvider({ children }: { children: React.ReactNode }) 
   const [isPending, setIsPending] = useState(false);
   const [transitionProgress, setTransitionProgress] = useState<'idle' | 'animating-in' | 'animating-out'>('idle');
   const [cursorX, setCursorX] = useState(0);
+  const [cursorY, setCursorY] = useState(0);
 
-  const startTransition = (href: string, x: number) => {
+  const startTransition = (href: string, x: number, y: number) => {
     if (isPending || transitionProgress !== 'idle') return;
 
     // Check for prefers-reduced-motion
@@ -31,6 +33,7 @@ export function TransitionProvider({ children }: { children: React.ReactNode }) 
     if (lenis) lenis.stop();
 
     setCursorX(x);
+    setCursorY(y);
     setTransitionProgress('animating-in');
     setIsPending(true);
 
@@ -72,6 +75,7 @@ export function TransitionProvider({ children }: { children: React.ReactNode }) 
         transitionProgress,
         setTransitionProgress,
         cursorX,
+        cursorY,
       }}
     >
       {children}

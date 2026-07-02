@@ -28,7 +28,15 @@ export function TextReveal({
     const el = ref.current;
     if (!el) return;
 
-    scrollTriggerText(el, delay);
+    const anim = scrollTriggerText(el, delay);
+    return () => {
+      if (anim) {
+        anim.kill();
+        if (anim.scrollTrigger) {
+          anim.scrollTrigger.kill();
+        }
+      }
+    };
   }, [text, delay]);
 
   return (

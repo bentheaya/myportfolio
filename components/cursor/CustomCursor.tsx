@@ -15,8 +15,9 @@ export function CustomCursor() {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    // Only run on desktop devices with fine pointers
-    if (window.matchMedia('(pointer: coarse)').matches) {
+    // Only skip on small screens or devices that do not support fine pointers (desktop touch screens will still show cursor)
+    const isMobileOrTablet = window.innerWidth < 1024 || !window.matchMedia('(pointer: fine)').matches;
+    if (isMobileOrTablet) {
       return;
     }
 
@@ -154,13 +155,21 @@ export function CustomCursor() {
       {/* Inner Dot */}
       <div
         ref={dotRef}
-        className="fixed top-0 left-0 w-1.5 h-1.5 bg-accent-bright rounded-full pointer-events-none z-50 mix-blend-difference transition-opacity duration-200"
+        className="fixed top-0 left-0 w-1.5 h-1.5 rounded-full pointer-events-none z-[201] mix-blend-difference transition-opacity duration-200"
+        style={{
+          backgroundColor: 'var(--color-accent-bright)',
+        }}
       />
-      {/* Outer Ring */}
+      {/* Outer Ring — initial border set inline so it's visible before first RAF tick */}
       <div
         ref={ringRef}
-        className="fixed top-0 left-0 rounded-full pointer-events-none z-50 mix-blend-difference transition-all duration-300 ease-out"
-        style={{ width: '28px', height: '28px' }}
+        className="fixed top-0 left-0 rounded-full pointer-events-none z-[201] mix-blend-difference"
+        style={{
+          width: '28px',
+          height: '28px',
+          border: '1px solid var(--color-accent-bright)',
+          transition: 'width 0.25s ease, height 0.25s ease',
+        }}
       />
     </>
   );

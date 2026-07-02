@@ -72,7 +72,7 @@ export function scrollTriggerText(el: HTMLElement, delay = 0) {
 
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (prefersReduced) {
-    gsap.fromTo(el, 
+    return gsap.fromTo(el, 
       { opacity: 0 }, 
       { 
         opacity: 1, 
@@ -85,12 +85,11 @@ export function scrollTriggerText(el: HTMLElement, delay = 0) {
         }
       }
     );
-    return;
   }
 
   const chars = splitTextToChars(el);
 
-  gsap.fromTo(
+  return gsap.fromTo(
     chars,
     {
       y: '110%',

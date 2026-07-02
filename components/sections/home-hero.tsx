@@ -8,8 +8,13 @@ import { animateTextIn } from '@/lib/animations';
 // Lazy-load Three.js scene — pass heroHeight for scroll-parallax
 const HeroScene = dynamic(() => import('@/components/three/HeroScene'), {
   ssr: false,
-  // Placeholder maintains layout while JS loads (transparent so photo shows)
-  loading: () => <div className="absolute inset-0 z-[1]" />,
+  loading: () => (
+    <div className="absolute inset-0 z-[1] flex items-center justify-center pointer-events-none select-none">
+      <span className="text-[9px] font-mono text-canvas-text-tertiary uppercase tracking-widest animate-pulse">
+        // loading.constellation_nodes...
+      </span>
+    </div>
+  ),
 });
 
 interface HomeHeroProps {
@@ -40,9 +45,17 @@ export function HomeHero({
   const sectionRef = useRef<HTMLElement>(null);
   const [mounted, setMounted]       = useState(false);
   const [heroHeight, setHeroHeight] = useState(0);
+  const [isMobile, setIsMobile]     = useState(false);
 
   useEffect(() => {
     setMounted(true);
+
+    const checkMobile = () => {
+      const mobile = window.innerWidth < 768 || !window.matchMedia('(pointer: fine)').matches;
+      setIsMobile(mobile);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
 
     // Measure the hero section height for scroll-parallax bounds
     if (sectionRef.current) {
@@ -51,8 +64,12 @@ export function HomeHero({
         if (sectionRef.current) setHeroHeight(sectionRef.current.offsetHeight);
       });
       ro.observe(sectionRef.current);
-      return () => ro.disconnect();
+      return () => {
+        ro.disconnect();
+        window.removeEventListener('resize', checkMobile);
+      };
     }
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   useEffect(() => {
@@ -102,7 +119,7 @@ export function HomeHero({
       </div>
 
       {/* ── z-[1]: Three.js constellation (transparent bg — photo shows) ───── */}
-      {mounted && <HeroScene heroHeight={heroHeight} />}
+      {mounted && !isMobile && <HeroScene heroHeight={heroHeight} />}
 
       {/* ── z-[2]: Bottom readability fade ──────────────────────────────────── */}
       <div className="absolute inset-0 z-[2] bg-gradient-to-t from-canvas-bg via-canvas-bg/20 to-transparent pointer-events-none" />
@@ -143,10 +160,10 @@ export function HomeHero({
       </div>
 
       {/* ── Scroll cue ───────────────────────────────────────────────────────── */}
-      <div className="absolute bottom-10 right-6 md:right-12 z-10 hidden sm:flex flex-col items-end gap-3 font-mono text-[9px] tracking-widest text-canvas-text-tertiary uppercase select-none pointer-events-none">
+      <div className="absolute bottom-10 right-6 md:right-12 z-10 flex flex-col items-end gap-3 font-mono text-[9px] tracking-widest text-canvas-text-tertiary uppercase select-none pointer-events-none">
         <span>// scroll.explore</span>
         <div className="w-[1px] h-14 bg-canvas-border/30 relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-4 bg-accent-bright animate-traveling-dot" />
+          <div className="absolute top-0 left-0 w-full h-4 animate-traveling-dot" style={{ backgroundColor: 'var(--color-accent-bright)' }} />
         </div>
       </div>
     </section>

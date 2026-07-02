@@ -6,6 +6,7 @@ import { getProjectBySlug, getProjectContent } from '@/lib/projects'
 import { SlopSlayerDemo } from '@/components/project/demos/SlopSlayerDemo'
 import { IntuiLabDemo } from '@/components/project/demos/IntuiLabDemo'
 import { UkweliDemo } from '@/components/project/demos/UkweliDemo'
+import { DiraDemo } from '@/components/project/demos/DiraDemo'
 
 interface PageProps {
   params: Promise<{ slug: string }>
@@ -77,6 +78,8 @@ export default async function ProjectShowcasePage({ params }: PageProps) {
     demoComponent = <IntuiLabDemo />
   } else if (slug === 'ukweli') {
     demoComponent = <UkweliDemo />
+  } else if (slug === 'dira') {
+    demoComponent = <DiraDemo />
   }
 
   return (
