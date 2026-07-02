@@ -1,12 +1,17 @@
+'use client';
+
+import { useState } from 'react';
 import { HomeHero } from '@/components/sections/home-hero';
 import { AboutSection } from '@/components/sections/about-section';
 import { FeaturedProjectsSection, type FeaturedProject } from '@/components/sections/featured-projects-section';
 import { ConstellationSection } from '@/components/sections/constellation-section';
 import { ContactSection } from '@/components/sections/contact-section';
 import { HueControl } from '@/components/ui/hue-control';
+import { PageLoader } from '@/components/ui/PageLoader';
 
 export default function Home() {
-  // Curated Featured projects data
+  const [loading, setLoading] = useState(true);
+
   const featuredProjects: FeaturedProject[] = [
     {
       id: 'slopslayer',
@@ -42,16 +47,18 @@ export default function Home() {
     },
   ];
 
-  // Contact links
   const contactLinks = [
-    { label: 'GitHub', href: 'https://github.com/bentheaya', icon: '→' },
-    { label: 'LinkedIn', href: 'https://linkedin.com/in/bentheaya', icon: '→' },
-    { label: 'Email', href: 'mailto:bentheaya@gmail.com', icon: '→' },
+    { label: 'GitHub',   href: 'https://github.com/bentheaya',          icon: '→' },
+    { label: 'LinkedIn', href: 'https://linkedin.com/in/bentheaya',      icon: '→' },
+    { label: 'Email',    href: 'mailto:bentheaya@gmail.com',             icon: '→' },
   ];
 
   return (
     <>
-      {/* Hero Section */}
+      {/* Full-screen loader — dismounts after fade-out completes */}
+      {loading && <PageLoader onComplete={() => setLoading(false)} />}
+
+      {/* Main content — already rendered in DOM, revealed as loader fades */}
       <HomeHero
         name="Benaih Shaback."
         tagline="Building at the intersection of mathematics, systems, and learning"
@@ -59,7 +66,6 @@ export default function Home() {
         status="Open to Work"
       />
 
-      {/* About Section */}
       <AboutSection
         title="About Me"
         paragraphs={[
@@ -69,7 +75,6 @@ export default function Home() {
         highlights={['Mathematics', 'Computer Science', 'TypeScript', 'Python', 'Prolog', 'Next.js', 'Three.js', 'PostgreSQL', 'Redis']}
       />
 
-      {/* Featured Projects */}
       <FeaturedProjectsSection
         title="Featured Work"
         projects={featuredProjects}
@@ -77,10 +82,8 @@ export default function Home() {
         viewAllHref="/work"
       />
 
-      {/* Constellation Section */}
       <ConstellationSection />
 
-      {/* Contact Section */}
       <ContactSection
         title="Get In Touch"
         subtitle="Interested in working together? Have a question about my work or research?"
@@ -88,8 +91,7 @@ export default function Home() {
         links={contactLinks}
       />
 
-      {/* Hue Control for accent color adjustment */}
       <HueControl />
     </>
-  )
+  );
 }

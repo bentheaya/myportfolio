@@ -353,9 +353,58 @@
     animation: particle-float-slow 20s ease-in-out infinite;
   }
 
+
   @keyframes particle-float-slower {
     0%, 100% { transform: translate(0, 0); }
     50% { transform: translate(-50px, 40px); }
+  }
+
+  .animate-particle-float-slower {
+    animation: particle-float-slower 26s ease-in-out infinite;
+  }
+
+  /* ── Loader: Bubble rise animation ─────────────────────────────────── */
+  @keyframes bubble-rise {
+    0% {
+      transform: translateY(0) translateX(0) scale(1);
+      opacity: 0;
+    }
+    8% {
+      opacity: 1;
+    }
+    /* Subtle horizontal wobble mid-flight */
+    30% { transform: translateY(-30vh) translateX(12px) scale(0.97); }
+    55% { transform: translateY(-55vh) translateX(-8px) scale(1.02); }
+    80% { transform: translateY(-80vh) translateX(10px) scale(0.98); }
+    92% { opacity: 0.8; }
+    100% {
+      transform: translateY(-115vh) translateX(0) scale(0.95);
+      opacity: 0;
+    }
+  }
+
+  /* ── Loader: Skeleton shimmer ────────────────────────────────────────── */
+  @keyframes shimmer-sweep {
+    0%   { background-position: -200% center; }
+    100% { background-position:  200% center; }
+  }
+
+  .skeleton-shimmer {
+    background: linear-gradient(
+      90deg,
+      rgb(20 20 20) 0%,
+      rgb(32 32 32) 40%,
+      rgb(26 26 26) 60%,
+      rgb(20 20 20) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer-sweep 1.6s ease-in-out infinite;
+  }
+
+  /* ── Loader: Progress dot pulse ──────────────────────────────────────── */
+  @keyframes dot-pulse {
+    0%, 100% { opacity: 0.25; transform: scale(0.8); }
+    50%       { opacity: 1;    transform: scale(1.2); }
   }
 
   .animate-particle-float-slower {

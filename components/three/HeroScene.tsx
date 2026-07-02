@@ -1,41 +1,37 @@
 'use client';
 
-import React, { useRef, useState, useEffect } from 'react';
+import React, { createContext, useContext, useRef, useState, useEffect } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
 import * as THREE from 'three';
 import { projectsMetadata, ProjectMetadata } from '@/lib/projects';
 import { usePageTransition } from '@/components/transitions/TransitionContext';
 
-// ─── Node positions ───────────────────────────────────────────────────────────
-// Y range is constrained to roughly [-3, 2.5] so nodes stay inside a single
-// viewport height at fov=60, camera z=5. Farther nodes are revealed by scroll.
+// ─── Node positions (desktop reference frame) ─────────────────────────────────
+// X span: -3.5 to +4.5 = 8 world units at desktop fov60/z5 (vp width ≈ 5.77)
+// On mobile the xScale factor compresses them so nothing spills offscreen.
 const nodePositions: { [slug: string]: [number, number, number] } = {
-  // Top cluster (visible immediately)
-  slopslayer:               [-3,    2,    -2],
+  slopslayer:               [-2.8,  2,    -2],
   opinionminer:             [-1,    2.2,  -3],
-  nutrilogic:               [1.5,   2,    -2.5],
-  'ai-course-recommender':  [3.5,   1.5,  -2],
+  nutrilogic:               [1.2,   2,    -2.5],
+  'ai-course-recommender':  [3,     1.5,  -2],
 
-  // Mid cluster
   dira:                     [-2,    0.2,  -1],
   diffgeo:                  [0,     0.5,  -2],
-  musicgame:                [2.5,  -0.5,  -1.5],
-  collab:                   [1,    -0.8,  -4],
+  musicgame:                [2.2,  -0.5,  -1.5],
+  collab:                   [0.8,  -0.8,  -4],
 
-  // Lower cluster (revealed on scroll)
-  spiks:                    [-2.5, -2,    -2],
-  'legacy-core':            [0.5,  -2.2,  -2.5],
-  miniecommerce:            [3,    -2,    -2],
-  'quickfood-frontend':     [4.5,  -1.5,  -2],
-  'the-househub':           [2,    -3,    -1.8],
+  spiks:                    [-2.2, -2,    -2],
+  'legacy-core':            [0.4,  -2.2,  -2.5],
+  miniecommerce:            [2.5,  -2,    -2],
+  'quickfood-frontend':     [3.8,  -1.5,  -2],
+  'the-househub':           [1.8,  -3,    -1.8],
 
-  // Bottom cluster (revealed further on scroll)
-  intuilab:                 [-3.5, -3.8,  -3],
-  ukweli:                   [-1.5, -4.2,  -2.5],
-  nyaraka:                  [0.5,  -4.2,  -3],
-  veld:                     [2.5,  -3.8,  -2.5],
-  'digital-economy':        [4.5,  -3.2,  -3],
+  intuilab:                 [-3,   -3.8,  -3],
+  ukweli:                   [-1.2, -4.2,  -2.5],
+  nyaraka:                  [0.4,  -4.2,  -3],
+  veld:                     [2,    -3.8,  -2.5],
+  'digital-economy':        [3.6,  -3.2,  -3],
 };
 
 // ─── Graph edges ─────────────────────────────────────────────────────────────
@@ -53,11 +49,9 @@ const connections: [string, string][] = [
   ['ukweli',                'nyaraka'],
   ['nyaraka',               'veld'],
   ['veld',                  'digital-economy'],
-  // Cross-track bridges
   ['ai-course-recommender', 'dira'],
   ['musicgame',             'spiks'],
   ['the-househub',          'intuilab'],
-  // Hub spokes
   ['collab',                'diffgeo'],
   ['collab',                'legacy-core'],
   ['collab',                'dira'],
@@ -67,25 +61,35 @@ const EDGE_COLOR        = '#3a8c6e';
 const EDGE_COLOR_BRIDGE = '#2a5e4a';
 const EDGE_OPACITY      = 0.6;
 
+// ─── xScale context — shared between orchestrator, nodes, and edges ───────────
+const XScaleContext = createContext<number>(1);
+
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+function scaleX(pos: [number, number, number], xScale: number): [number, number, number] {
+  return [pos[0] * xScale, pos[1], pos[2]];
+}
+
 // ─── Node ────────────────────────────────────────────────────────────────────
 interface NodeProps {
   project: ProjectMetadata;
-  position: [number, number, number];
+  position: [number, number, number]; // raw (desktop) position
   onNodeClick: (slug: string) => void;
 }
 
 function Node({ project, position, onNodeClick }: NodeProps) {
+  const xScale  = useContext(XScaleContext);
   const [hovered, setHovered] = useState(false);
   const meshRef = useRef<THREE.Mesh>(null);
   const glowRef = useRef<THREE.Mesh>(null);
   const timeRef = useRef(Math.random() * 100);
 
+  const scaled = scaleX(position, xScale);
+
   useFrame(() => {
     if (!meshRef.current || !glowRef.current) return;
     const targetScale = hovered ? 1.9 : 1.0;
     meshRef.current.scale.lerp(
-      new THREE.Vector3(targetScale, targetScale, targetScale),
-      0.12
+      new THREE.Vector3(targetScale, targetScale, targetScale), 0.12
     );
     timeRef.current += 0.018;
     const breathe = 1 + Math.sin(timeRef.current) * 0.25;
@@ -96,15 +100,10 @@ function Node({ project, position, onNodeClick }: NodeProps) {
   });
 
   return (
-    <group position={position}>
+    <group position={scaled}>
       <mesh ref={glowRef}>
         <sphereGeometry args={[0.28, 16, 16]} />
-        <meshBasicMaterial
-          color={project.accentColor}
-          transparent
-          opacity={0.08}
-          depthWrite={false}
-        />
+        <meshBasicMaterial color={project.accentColor} transparent opacity={0.08} depthWrite={false} />
       </mesh>
       <mesh
         ref={meshRef}
@@ -141,9 +140,11 @@ function Node({ project, position, onNodeClick }: NodeProps) {
 
 // ─── Graph edges ─────────────────────────────────────────────────────────────
 function GraphEdges() {
+  const xScale     = useContext(XScaleContext);
   const primaryRef = useRef<THREE.BufferGeometry>(null);
   const bridgeRef  = useRef<THREE.BufferGeometry>(null);
 
+  // Rebuild edge geometry whenever xScale changes (mobile resize)
   useEffect(() => {
     const primary = connections.slice(0, -4);
     const bridges = connections.slice(-4);
@@ -154,8 +155,8 @@ function GraphEdges() {
         const posA = nodePositions[a];
         const posB = nodePositions[b];
         if (posA && posB) {
-          pts.push(new THREE.Vector3(...posA));
-          pts.push(new THREE.Vector3(...posB));
+          pts.push(new THREE.Vector3(...scaleX(posA, xScale)));
+          pts.push(new THREE.Vector3(...scaleX(posB, xScale)));
         }
       });
       return pts;
@@ -163,7 +164,7 @@ function GraphEdges() {
 
     if (primaryRef.current) primaryRef.current.setFromPoints(buildPoints(primary));
     if (bridgeRef.current)  bridgeRef.current.setFromPoints(buildPoints(bridges));
-  }, []);
+  }, [xScale]);
 
   return (
     <>
@@ -181,12 +182,20 @@ function GraphEdges() {
 
 // ─── Scene Orchestrator ───────────────────────────────────────────────────────
 function SceneOrchestrator({ heroHeight }: { heroHeight: number }) {
-  const { camera, clock } = useThree();
+  const { camera, clock, viewport } = useThree();
   const mouse      = useRef({ x: 0, y: 0 });
   const scrollY    = useRef(0);
   const { startTransition } = usePageTransition();
 
-  // Track mouse for parallax
+  // ── Compute xScale from current viewport width ──
+  // Desktop ref viewport width at fov60/z5 ≈ 5.77 world units
+  // We measure full x-span: from -3 to +4 = 7 world units
+  // xScale clamps x positions so max x-extent stays within the viewport
+  const xMaxDesktop = 3.8; // max abs x in nodePositions (after tightening)
+  // Half the viewport width in world units, with a 15% margin
+  const halfVP      = viewport.width * 0.42;
+  const xScale      = Math.min(1, halfVP / xMaxDesktop);
+
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       mouse.current.x = (e.clientX / window.innerWidth) * 2 - 1;
@@ -196,10 +205,8 @@ function SceneOrchestrator({ heroHeight }: { heroHeight: number }) {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  // Track scroll — only within the hero section height
   useEffect(() => {
     const handleScroll = () => {
-      // Clamp so scroll only affects camera within the hero section
       scrollY.current = Math.min(window.scrollY, heroHeight);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -208,15 +215,10 @@ function SceneOrchestrator({ heroHeight }: { heroHeight: number }) {
 
   useFrame(() => {
     const time = clock.getElapsedTime() * 0.14;
-
-    // Scroll-parallax: as user scrolls down hero, camera moves down to reveal lower nodes
-    // scrollProgress: 0 (top) → 1 (bottom of hero)
     const scrollProgress = heroHeight > 0 ? scrollY.current / heroHeight : 0;
-    // Camera Y starts at 0, goes to -3.5 as you scroll the full hero height
     const scrollCameraY  = -scrollProgress * 3.5;
 
-    // Gentle ambient drift + mouse parallax
-    const targetX = Math.sin(time) * 0.7 + mouse.current.x * 0.35;
+    const targetX = Math.sin(time) * 0.6 + mouse.current.x * 0.3;
     const targetY = Math.cos(time) * 0.4 + mouse.current.y * 0.25 + scrollCameraY;
 
     camera.position.x += (targetX - camera.position.x) * 0.05;
@@ -229,7 +231,7 @@ function SceneOrchestrator({ heroHeight }: { heroHeight: number }) {
   };
 
   return (
-    <>
+    <XScaleContext.Provider value={xScale}>
       <ambientLight intensity={0.5} />
       <GraphEdges />
       {projectsMetadata.map((project) => {
@@ -244,14 +246,13 @@ function SceneOrchestrator({ heroHeight }: { heroHeight: number }) {
           />
         );
       })}
-    </>
+    </XScaleContext.Provider>
   );
 }
 
 // ─── Canvas root ─────────────────────────────────────────────────────────────
 export default function HeroScene({ heroHeight }: { heroHeight: number }) {
   return (
-    // bg-transparent + no bg class = WebGL alpha punches through to the photo
     <div className="absolute inset-0 z-[1] w-full h-full pointer-events-auto">
       <Canvas
         camera={{ position: [0, 0, 5], fov: 60 }}
