@@ -123,6 +123,12 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
+  /* Hide the native cursor when custom cursor JS is active (desktop only) */
+  html.custom-cursor-active,
+  html.custom-cursor-active * {
+    cursor: none !important;
+  }
+
   body {
     @apply bg-canvas-bg text-canvas-text antialiased;
     background-attachment: fixed;
