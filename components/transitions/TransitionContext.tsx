@@ -45,23 +45,23 @@ export function TransitionProvider({ children }: { children: React.ReactNode }) 
       return;
     }
 
-    // Dynamic sequence wait (matches the 300ms timeline step in PageTransition)
+    // Wait for liquid flood-in animation (400ms) before pushing route
     setTimeout(() => {
-      // Perform routing behind the wipe overlay
+      // Perform routing while the overlay is fully covering the screen
       router.push(href);
-      
-      // Allow Next.js route change to resolve before animating out
+
+      // Allow Next.js route change to resolve, then trigger recede
       setTimeout(() => {
         setTransitionProgress('animating-out');
-        
-        // Final cleanup after animate-out finishes (300ms)
+
+        // Final cleanup after liquid recede finishes (420ms)
         setTimeout(() => {
           setIsPending(false);
           setTransitionProgress('idle');
           if (lenis) lenis.start();
-        }, 300);
-      }, 100);
-    }, 300);
+        }, 450);
+      }, 120);
+    }, 420);
   };
 
   return (

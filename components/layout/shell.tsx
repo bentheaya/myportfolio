@@ -1,6 +1,7 @@
 import { Header } from './header'
 import { MobileNav } from './mobile-nav'
 import { CustomCursor } from '@/components/cursor/CustomCursor'
+import { CursorTrail } from '@/components/cursor/CursorTrail'
 import { LenisProvider } from '@/components/layout/LenisProvider'
 import { TransitionProvider } from '@/components/transitions/TransitionContext'
 import { PageTransition } from '@/components/transitions/PageTransition'
@@ -17,7 +18,10 @@ export function Shell({ children }: ShellProps) {
           {/* Custom Cursor System */}
           <CustomCursor />
 
-          {/* Page Transition wipe overlay */}
+          {/* Comet trail canvas overlay */}
+          <CursorTrail />
+
+          {/* Page Transition overlay */}
           <PageTransition />
 
           {/* Header */}
