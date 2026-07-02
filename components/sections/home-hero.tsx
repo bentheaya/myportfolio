@@ -5,10 +5,11 @@ import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import { animateTextIn } from '@/lib/animations';
 
-// Lazy-load the R3F Hero Scene to prevent SSR hydration mismatches
+// Lazy-load Three.js scene — pass heroHeight for scroll-parallax
 const HeroScene = dynamic(() => import('@/components/three/HeroScene'), {
   ssr: false,
-  loading: () => <div className="absolute inset-0 z-0 bg-canvas-bg" />,
+  // Placeholder maintains layout while JS loads (transparent so photo shows)
+  loading: () => <div className="absolute inset-0 z-[1]" />,
 });
 
 interface HomeHeroProps {
@@ -21,11 +22,11 @@ interface HomeHeroProps {
 
 /**
  * HomeHero
- * Premium left-aligned cinematic hero section.
- * - Interactive Three.js node-graph constellation as full canvas background
- * - Real photo blended at low opacity as environmental texture (top-right)
- * - Massive responsive typography with split-character GSAP entry
- * - Ambient overlay gradient ensuring text readability
+ * Layer order (bottom → top):
+ *   z-0   photo texture (luminosity blend, 18% opacity)
+ *   z-[1] Three.js canvas (alpha:true, transparent bg — photo shows through)
+ *   z-[2] bottom readability gradient
+ *   z-10  typography
  */
 export function HomeHero({
   name,
@@ -34,12 +35,28 @@ export function HomeHero({
   status,
   className = '',
 }: HomeHeroProps) {
-  const nameRef = useRef<HTMLHeadingElement>(null);
+  const nameRef    = useRef<HTMLHeadingElement>(null);
   const detailsRef = useRef<HTMLDivElement>(null);
-  const [mounted, setMounted] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+  const [mounted, setMounted]       = useState(false);
+  const [heroHeight, setHeroHeight] = useState(0);
 
   useEffect(() => {
     setMounted(true);
+
+    // Measure the hero section height for scroll-parallax bounds
+    if (sectionRef.current) {
+      setHeroHeight(sectionRef.current.offsetHeight);
+      const ro = new ResizeObserver(() => {
+        if (sectionRef.current) setHeroHeight(sectionRef.current.offsetHeight);
+      });
+      ro.observe(sectionRef.current);
+      return () => ro.disconnect();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
 
     if (nameRef.current) {
       animateTextIn(nameRef.current, 0.2);
@@ -56,39 +73,41 @@ export function HomeHero({
         }
       });
     }
-  }, []);
+  }, [mounted]);
 
   return (
     <section
+      ref={sectionRef}
       className={`relative min-h-screen w-full flex items-end justify-start px-6 md:px-12 pb-20 md:pb-28 overflow-hidden bg-canvas-bg z-10 ${className}`}
     >
-      {/* ── Background: photo texture blended with dark canvas ── */}
-      <div className="absolute inset-0 z-[0] pointer-events-none select-none">
+      {/* ── z-0: Background photo ─────────────────────────────────────────── */}
+      {/* Visible because the Canvas div above is transparent (no bg class).    */}
+      <div className="absolute inset-0 z-0 pointer-events-none select-none">
         <Image
           src="/hero-bg.jpg"
           alt=""
           fill
-          className="object-cover object-center"
+          className="object-cover object-[center_30%]"
           style={{
-            opacity: 0.055,
+            opacity: 0.18,
             mixBlendMode: 'luminosity',
-            filter: 'grayscale(100%) contrast(1.1)',
+            filter: 'grayscale(60%) contrast(1.05) brightness(0.85)',
           }}
           priority
           sizes="100vw"
           aria-hidden
         />
-        {/* Vignette to kill harsh edges of the photo */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_60%_30%,transparent_20%,rgb(8,8,8)_75%)]" />
+        {/* Soft vignette only at the very edges — not aggressive */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_110%_80%_at_55%_35%,transparent_35%,rgb(8,8,8)_85%)]" />
       </div>
 
-      {/* ── Three.js constellation graph ── */}
-      {mounted && <HeroScene />}
+      {/* ── z-[1]: Three.js constellation (transparent bg — photo shows) ───── */}
+      {mounted && <HeroScene heroHeight={heroHeight} />}
 
-      {/* ── Readability gradient: pull text up from dark base ── */}
-      <div className="absolute inset-0 z-[2] bg-gradient-to-t from-canvas-bg via-canvas-bg/25 to-transparent pointer-events-none" />
+      {/* ── z-[2]: Bottom readability fade ──────────────────────────────────── */}
+      <div className="absolute inset-0 z-[2] bg-gradient-to-t from-canvas-bg via-canvas-bg/20 to-transparent pointer-events-none" />
 
-      {/* ── Typography overlay ── */}
+      {/* ── z-10: Typography ─────────────────────────────────────────────────── */}
       <div className="relative z-10 max-w-4xl space-y-6 select-none pointer-events-none">
         <h1
           ref={nameRef}
@@ -123,7 +142,7 @@ export function HomeHero({
         </div>
       </div>
 
-      {/* ── Scroll explore cue ── */}
+      {/* ── Scroll cue ───────────────────────────────────────────────────────── */}
       <div className="absolute bottom-10 right-6 md:right-12 z-10 hidden sm:flex flex-col items-end gap-3 font-mono text-[9px] tracking-widest text-canvas-text-tertiary uppercase select-none pointer-events-none">
         <span>// scroll.explore</span>
         <div className="w-[1px] h-14 bg-canvas-border/30 relative overflow-hidden">

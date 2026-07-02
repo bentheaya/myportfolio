@@ -45,23 +45,23 @@ export function TransitionProvider({ children }: { children: React.ReactNode }) 
       return;
     }
 
-    // Wait for liquid flood-in animation (400ms) before pushing route
+    // Wait for water flood animation to fully cover the screen before routing
+    // Flood total: 0.28 + 0.22 + 0.22 = 0.72s → push at 730ms
     setTimeout(() => {
-      // Perform routing while the overlay is fully covering the screen
       router.push(href);
 
-      // Allow Next.js route change to resolve, then trigger recede
+      // Let Next.js resolve the new route, then trigger the recede
       setTimeout(() => {
         setTransitionProgress('animating-out');
 
-        // Final cleanup after liquid recede finishes (420ms)
+        // Recede total: 0.28 + 0.26 = 0.54s → cleanup at 620ms
         setTimeout(() => {
           setIsPending(false);
           setTransitionProgress('idle');
           if (lenis) lenis.start();
-        }, 450);
+        }, 620);
       }, 120);
-    }, 420);
+    }, 730);
   };
 
   return (
