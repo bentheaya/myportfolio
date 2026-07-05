@@ -133,8 +133,14 @@ export function InteractionShell({
           onClick={handleInteraction}
           onMouseEnter={handleInteraction}
           onTouchStart={handleInteraction}
-          className="relative w-full h-[350px] md:h-[550px] bg-canvas-card/30 border border-canvas-border/30 rounded-xl overflow-hidden shadow-2xl flex flex-col justify-between p-6"
+          className="relative w-full h-[350px] md:h-[550px] bg-canvas-card/30 border border-canvas-border/30 rounded-xl overflow-hidden shadow-2xl flex flex-col justify-between p-6 transition-all duration-500 hover:border-accent-bright/20"
+          style={{
+            backgroundImage: 'radial-gradient(rgba(var(--accent-rgb, 255,255,255), 0.03) 1px, transparent 1px)',
+            backgroundSize: '24px 24px'
+          }}
         >
+          {/* Subtle loading pulse grid accent */}
+          <div className="absolute inset-0 bg-gradient-to-br from-accent-bright/[0.01] to-transparent pointer-events-none animate-pulse duration-[3000ms]" />
           {/* Custom rendering slot */}
           {children ? (
             children

@@ -67,12 +67,25 @@ export function ProjectCard({
       >
         <div
           ref={cardRef}
-          style={style}
-          className={`group relative overflow-hidden rounded-xl border border-canvas-border bg-canvas-elevated/50 p-6 transition-all duration-300 magnetic hover:border-accent-bright/50 hover:glow-accent-lg ${className}`}
+          style={{
+            ...style,
+            boxShadow: isHovered 
+              ? `0 10px 30px -10px hsl(var(--accent-h) var(--accent-s) var(--accent-l) / 0.3), inset 0 0 20px -5px hsl(var(--accent-h) var(--accent-s) var(--accent-l) / 0.2)` 
+              : 'none',
+          }}
+          className={`group relative overflow-hidden rounded-xl border border-canvas-border bg-canvas-elevated/50 p-6 transition-all duration-300 magnetic hover:border-accent-bright/50 ${className}`}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
           onMouseMove={handleMouseMove}
         >
+          {/* Inner scan line on hover */}
+          <div 
+            className="absolute left-0 w-full h-[1.5px] opacity-0 group-hover:opacity-100 pointer-events-none z-20"
+            style={{
+              background: 'linear-gradient(90deg, transparent, var(--color-accent-bright), transparent)',
+              animation: isHovered ? 'scan-sweep 2.5s linear infinite' : 'none',
+            }}
+          />
           {/* Background image with overlay */}
           {image && (
             <div className="absolute inset-0 opacity-10 group-hover:opacity-20 transition-opacity duration-300">

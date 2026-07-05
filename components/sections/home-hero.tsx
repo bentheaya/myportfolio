@@ -4,6 +4,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import { animateTextIn } from '@/lib/animations';
+import gsap from 'gsap';
+import ScrollTrigger from 'gsap/ScrollTrigger';
 
 // Lazy-load Three.js scene — pass heroHeight for scroll-parallax
 const HeroScene = dynamic(() => import('@/components/three/HeroScene'), {
@@ -40,12 +42,15 @@ export function HomeHero({
   status,
   className = '',
 }: HomeHeroProps) {
-  const nameRef    = useRef<HTMLHeadingElement>(null);
+  const line1Ref   = useRef<HTMLSpanElement>(null);
+  const line2Ref   = useRef<HTMLSpanElement>(null);
   const detailsRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const [mounted, setMounted]       = useState(false);
   const [heroHeight, setHeroHeight] = useState(0);
   const [isMobile, setIsMobile]     = useState(false);
+
+  const words = name.split(' ');
 
   useEffect(() => {
     setMounted(true);
@@ -75,8 +80,45 @@ export function HomeHero({
   useEffect(() => {
     if (!mounted) return;
 
-    if (nameRef.current) {
-      animateTextIn(nameRef.current, 0.2);
+    const line1 = line1Ref.current;
+    const line2 = line2Ref.current;
+    const section = sectionRef.current;
+
+    if (line1) {
+      animateTextIn(line1, 0.2);
+    }
+    if (line2) {
+      animateTextIn(line2, 0.4);
+    }
+
+    let t1: gsap.core.Tween | null = null;
+    let t2: gsap.core.Tween | null = null;
+
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!prefersReduced && line1 && line2 && section) {
+      gsap.registerPlugin(ScrollTrigger);
+
+      t1 = gsap.to(line1, {
+        x: -90,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: section,
+          start: 'top top',
+          end: 'bottom top',
+          scrub: true,
+        }
+      });
+
+      t2 = gsap.to(line2, {
+        x: 90,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: section,
+          start: 'top top',
+          end: 'bottom top',
+          scrub: true,
+        }
+      });
     }
 
     if (detailsRef.current) {
@@ -90,6 +132,17 @@ export function HomeHero({
         }
       });
     }
+
+    return () => {
+      if (t1) {
+        t1.kill();
+        t1.scrollTrigger?.kill();
+      }
+      if (t2) {
+        t2.kill();
+        t2.scrollTrigger?.kill();
+      }
+    };
   }, [mounted]);
 
   return (
@@ -125,12 +178,16 @@ export function HomeHero({
       <div className="absolute inset-0 z-[2] bg-gradient-to-t from-canvas-bg via-canvas-bg/20 to-transparent pointer-events-none" />
 
       {/* ── z-10: Typography ─────────────────────────────────────────────────── */}
-      <div className="relative z-10 max-w-4xl space-y-6 select-none pointer-events-none">
+      <div className="relative z-10 max-w-4xl space-y-6 select-none pointer-events-none w-full">
         <h1
-          ref={nameRef}
-          className="text-5xl md:text-7xl lg:text-8xl font-heading font-bold text-canvas-text leading-[0.9] tracking-tight uppercase"
+          className="text-5xl md:text-7xl lg:text-8xl font-heading font-bold text-canvas-text leading-[0.9] tracking-tight uppercase flex flex-col gap-2"
         >
-          {name}
+          <span ref={line1Ref} className="inline-block transform-gpu origin-left">
+            {words[0]}
+          </span>
+          <span ref={line2Ref} className="inline-block pl-8 sm:pl-16 transform-gpu origin-left">
+            {words[1] || ''}
+          </span>
         </h1>
 
         <p className="text-sm md:text-lg text-canvas-text-secondary max-w-2xl font-mono leading-relaxed">

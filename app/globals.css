@@ -344,6 +344,11 @@
     animation: scan-laser-hero 6s linear infinite;
   }
 
+  @keyframes scan-sweep {
+    0% { transform: translateY(-10%); }
+    100% { transform: translateY(1800%); }
+  }
+
   @keyframes particle-float-slow {
     0%, 100% { transform: translate(0, 0); }
     50% { transform: translate(40px, -60px); }

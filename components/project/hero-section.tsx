@@ -4,6 +4,7 @@ import React, { useEffect } from 'react'
 import { ChevronLeft } from 'lucide-react'
 import { TransitionLink } from '@/components/transitions/TransitionLink'
 import { useHue } from '@/components/hue/HueProvider'
+import { ProjectHeroBackground } from '@/components/project/project-hero-background'
 
 interface HeroSectionProps {
   backHref?: string
@@ -45,46 +46,8 @@ export function HeroSection({
 
   // Custom flagship background rendering
   const renderBrandedBackground = () => {
-    if (slug === 'slopslayer') {
-      return (
-        <div className="absolute inset-0 z-0 pointer-events-none select-none overflow-hidden opacity-20">
-          {/* Dotted grid map overlay */}
-          <div className="absolute inset-0 bg-[radial-gradient(#ffffff0a_1px,transparent_1px)] [background-size:24px_24px]" />
-          
-          {/* Laser scan lines */}
-          <div className="absolute left-0 top-0 w-full h-[1px] bg-accent-bright animate-scan-laser-hero" />
-          
-          {/* Tech HUD corner brackets */}
-          <div className="absolute top-12 left-12 w-6 h-6 border-t-2 border-l-2 border-accent-bright/40" />
-          <div className="absolute top-12 right-12 w-6 h-6 border-t-2 border-r-2 border-accent-bright/40" />
-          <div className="absolute bottom-12 left-12 w-6 h-6 border-b-2 border-l-2 border-accent-bright/40" />
-          <div className="absolute bottom-12 right-12 w-6 h-6 border-b-2 border-r-2 border-accent-bright/40" />
-        </div>
-      )
-    }
-
-    if (slug === 'intuilab') {
-      return (
-        <div className="absolute inset-0 z-0 pointer-events-none select-none overflow-hidden opacity-10">
-          {/* Drifting science particles */}
-          <div className="absolute w-44 h-44 rounded-full bg-accent-bright/10 filter blur-[80px] top-1/4 left-1/4 animate-particle-float-slow" />
-          <div className="absolute w-56 h-56 rounded-full bg-accent-bright/8 filter blur-[100px] bottom-1/3 right-1/4 animate-particle-float-slower" />
-        </div>
-      )
-    }
-
-    if (slug === 'ukweli') {
-      return (
-        <div className="absolute inset-0 z-0 pointer-events-none select-none overflow-hidden flex items-center justify-center">
-          {/* Ultra-large faded text overlay */}
-          <div className="opacity-[0.015] font-heading font-extrabold text-[26vw] uppercase tracking-widest text-canvas-text leading-none select-none">
-            UKWELI
-          </div>
-        </div>
-      )
-    }
-
-    return null
+    if (!slug) return null
+    return <ProjectHeroBackground slug={slug} accentHue={accentHue} />
   }
 
   return (
